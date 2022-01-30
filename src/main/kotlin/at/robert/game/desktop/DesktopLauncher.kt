@@ -1,12 +1,13 @@
 package at.robert.game.desktop
 
-import at.robert.game.RacingGame
-import com.badlogic.gdx.backends.lwjgl.LwjglApplication
-import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration
+import at.robert.game.TestGame
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application
+import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration
 
 fun main() {
-    val config = LwjglApplicationConfiguration()
-    config.title = "Robert's Game"
-    config.foregroundFPS = 0
-    LwjglApplication(RacingGame(), config)
+    Lwjgl3Application(TestGame(), Lwjgl3ApplicationConfiguration().apply {
+        setTitle("Robert's Game")
+        setWindowedMode(800, 600)
+        setForegroundFPS(0)
+    })
 }

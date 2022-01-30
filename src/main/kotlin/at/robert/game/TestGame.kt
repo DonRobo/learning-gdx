@@ -11,7 +11,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.ScreenUtils
 import kotlin.math.*
 
-class RacingGame : Game() {
+class TestGame : Game() {
     private lateinit var batch: PolygonSpriteBatch
 
     private lateinit var car: TextureRegion
@@ -53,8 +53,9 @@ class RacingGame : Game() {
     private var gameStart = 0L
     private var lastUpdate = 0L
     override fun render() {
-        ScreenUtils.clear(.4f, .4f, .5f, 1f)
         update()
+
+        ScreenUtils.clear(.4f, .4f, .5f, 1f)
         batch.projectionMatrix = camera.combined
         batch.begin()
         renderGame()
@@ -89,6 +90,11 @@ class RacingGame : Game() {
         }
         speed = min(speed, 1000f)
         speed = max(speed, 0f)
+
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            x = Gdx.input.x.toFloat() + carRenderObject.width / 2f
+            y = Gdx.input.y.toFloat() + carRenderObject.height / 2f
+        }
     }
 
     private fun update() {
