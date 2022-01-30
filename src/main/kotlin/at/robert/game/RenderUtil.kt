@@ -1,6 +1,6 @@
 package at.robert.game
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 
 data class RenderObject(
@@ -15,7 +15,7 @@ data class RenderObject(
     )
 }
 
-fun SpriteBatch.renderObject(x: Float, y: Float, angle: Float, obj: RenderObject) {
+fun PolygonSpriteBatch.renderObject(x: Float, y: Float, angle: Float, obj: RenderObject) {
     draw(
         obj.texture,
         x,

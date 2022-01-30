@@ -1,18 +1,23 @@
 package at.robert.game
 
+import com.badlogic.gdx.Game
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g2d.PolygonRegion
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.ScreenUtils
 import kotlin.math.*
 
-class RacingGame : com.badlogic.gdx.Game() {
-    private lateinit var batch: SpriteBatch
+class RacingGame : Game() {
+    private lateinit var batch: PolygonSpriteBatch
+
     private lateinit var car: TextureRegion
     private lateinit var camera: OrthographicCamera
+
+    private lateinit var polygonRegion: PolygonRegion
 
     private lateinit var carRenderObject: RenderObject
 
@@ -24,11 +29,25 @@ class RacingGame : com.badlogic.gdx.Game() {
     var maxTimestep = 0.1f
 
     override fun create() {
-        batch = SpriteBatch()
+        batch = PolygonSpriteBatch()
+
         car = TextureRegion(Texture("car.png"))
         carRenderObject = RenderObject(80f, car)
         camera = OrthographicCamera()
         camera.setToOrtho(true, 800f, 600f)
+
+        polygonRegion = createPolyRegion()
+    }
+
+    private fun createPolyRegion(): PolygonRegion {
+        val vertices = floatArrayOf(0.0f, 0.0f, 100.0f, 0.0f, 70.0f, 100.0f, 0.0f, 100.0f)
+        val indices = shortArrayOf(0, 1, 3, 1, 2, 3)
+        return PolygonRegion(car, vertices, indices).apply {
+            val coords = floatArrayOf(0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f)
+            coords.forEachIndexed { index, fl ->
+                textureCoords[index] = fl
+            }
+        }
     }
 
     private var gameStart = 0L
@@ -46,6 +65,7 @@ class RacingGame : com.badlogic.gdx.Game() {
         batch.renderObject(
             x, y, angle + 90, carRenderObject
         )
+        batch.draw(polygonRegion, 0f, 0f)
     }
 
     private fun update(gameTime: Float, delta: Float) {
