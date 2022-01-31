@@ -13,6 +13,7 @@ repositories {
 }
 
 val gdxVersion = "1.10.0"
+val ktxVersion = "1.10.0-rc1"
 val gdxControllersVersion = "2.2.1"
 val ashleyVersion = "1.7.4"
 
@@ -23,6 +24,8 @@ dependencies {
     implementation("com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion")
     implementation("com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop")
     implementation("com.badlogicgames.ashley:ashley:$ashleyVersion")
+
+    implementation("io.github.libktx", "ktx-app", ktxVersion)
 }
 
 tasks.withType<KotlinCompile> {
