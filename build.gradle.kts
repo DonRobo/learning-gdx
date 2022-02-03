@@ -25,7 +25,8 @@ dependencies {
     implementation("com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop")
     implementation("com.badlogicgames.ashley:ashley:$ashleyVersion")
 
-    implementation("io.github.libktx", "ktx-app", ktxVersion)
+    implementation("io.github.libktx:ktx-ashley:$ktxVersion")
+    implementation("io.github.libktx:ktx-app:$ktxVersion")
 }
 
 tasks.withType<KotlinCompile> {

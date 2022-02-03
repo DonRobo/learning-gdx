@@ -11,7 +11,7 @@ import com.badlogic.gdx.utils.ScreenUtils
 import ktx.app.KtxScreen
 import kotlin.math.*
 
-class GameScreen : KtxScreen {
+class DemoRacingGameScreen : KtxScreen {
     private val batch = PolygonSpriteBatch()
 
     private val car = TextureRegion(Texture("car.png"))

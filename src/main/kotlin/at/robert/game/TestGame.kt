@@ -2,10 +2,10 @@ package at.robert.game
 
 import ktx.app.KtxGame
 
-class TestGame : KtxGame<GameScreen>() {
+class TestGame : KtxGame<AshleyGameScreen>() {
 
     override fun create() {
-        addScreen(GameScreen())
-        setScreen<GameScreen>()
+        addScreen(AshleyGameScreen())
+        setScreen<AshleyGameScreen>()
     }
 }
