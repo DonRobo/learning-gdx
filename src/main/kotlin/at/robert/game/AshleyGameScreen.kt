@@ -4,11 +4,12 @@ import at.robert.game.component.withSpriteComponent
 import at.robert.game.component.withTransformComponent
 import at.robert.game.system.Box2DDebugRenderSystem
 import at.robert.game.system.Box2DSystem
+import at.robert.game.system.RenderSystem
 import at.robert.game.system.RotationSystem
-import at.robert.game.system.SpriteSystem
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
-import com.badlogic.gdx.graphics.g2d.SpriteBatch
+import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
+import com.badlogic.gdx.math.Vector3
 import ktx.app.KtxScreen
 import ktx.app.clearScreen
 import ktx.ashley.entity
@@ -16,11 +17,16 @@ import com.badlogic.gdx.graphics.g2d.Sprite as GdxSprite
 
 class AshleyGameScreen : KtxScreen {
 
-    private var camera = OrthographicCamera()
+    private var camera = OrthographicCamera().apply {
+        setToOrtho(true, 10f, 10f)
+        position.set(Vector3.Zero)
+    }
+
     private fun setCamera(width: Float, aspectRatio: Float) {
         val height = width / aspectRatio
-        camera.setToOrtho(true, width, height)
-        camera.position.set(0f, 0f, 0f)
+
+        camera.viewportWidth = width
+        camera.viewportHeight = height
         camera.update()
 
         println("Camera: $width x ${width / aspectRatio}")
@@ -30,12 +36,12 @@ class AshleyGameScreen : KtxScreen {
         entityPoolMaxSize = 1000,
         componentPoolMaxSize = 1000,
     )
-    private val batch = SpriteBatch()
+    private val batch = PolygonSpriteBatch()
     private val testSprite = GdxSprite(Texture("car.png"))
     private val box2dSystem = Box2DSystem()
 
     init {
-        engine.addSystem(SpriteSystem(batch))
+        engine.addSystem(RenderSystem(batch))
         engine.addSystem(RotationSystem())
         engine.addSystem(box2dSystem)
         engine.addSystem(Box2DDebugRenderSystem(camera))
@@ -54,9 +60,7 @@ class AshleyGameScreen : KtxScreen {
     override fun render(delta: Float) {
         clearScreen(0.8f, 0.8f, 0.8f)
         batch.projectionMatrix = camera.combined
-        batch.begin()
         engine.update(delta)
-        batch.end()
     }
 
     override fun resize(width: Int, height: Int) {
