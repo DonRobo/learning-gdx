@@ -1,8 +1,8 @@
 package at.robert.game
 
+import at.robert.game.component.withRigidBody
 import at.robert.game.component.withSpriteComponent
 import at.robert.game.component.withTransformComponent
-import at.robert.game.system.Box2DDebugRenderSystem
 import at.robert.game.system.Box2DSystem
 import at.robert.game.system.RenderSystem
 import at.robert.game.system.RotationSystem
@@ -10,9 +10,12 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.math.Vector3
+import com.badlogic.gdx.physics.box2d.BodyDef
 import ktx.app.KtxScreen
 import ktx.app.clearScreen
 import ktx.ashley.entity
+import ktx.box2d.body
+import ktx.box2d.box
 import com.badlogic.gdx.graphics.g2d.Sprite as GdxSprite
 
 class AshleyGameScreen : KtxScreen {
@@ -44,15 +47,40 @@ class AshleyGameScreen : KtxScreen {
         engine.addSystem(RenderSystem(batch))
         engine.addSystem(RotationSystem())
         engine.addSystem(box2dSystem)
-        engine.addSystem(Box2DDebugRenderSystem(camera))
+//        engine.addSystem(Box2DDebugRenderSystem(camera))
 
-        engine.entity {
-            withSpriteComponent(testSprite)
-            withTransformComponent(
-                width = 1f,
-                height = 1f,
-                rotationDeg = 0f
-            )
+        box2dSystem.world.body {
+            type = BodyDef.BodyType.StaticBody
+            box(10f, 1f) {}
+            position.set(0f, -3f)
+        }
+        box2dSystem.world.body {
+            type = BodyDef.BodyType.StaticBody
+            box(1f, 10f) {}
+            position.set(-5f, 0f)
+        }
+        box2dSystem.world.body {
+            type = BodyDef.BodyType.StaticBody
+            box(1f, 10f) {}
+            position.set(5f, 0f)
+        }
+
+        for (i in 0 until 200) {
+            engine.entity {
+                withSpriteComponent(testSprite)
+                withTransformComponent(
+                    width = .3f,
+                    height = .3f,
+                    rotationDeg = 0f,
+                    y = i * -.20f
+                )
+                withRigidBody(
+                    type = BodyDef.BodyType.DynamicBody,
+                    density = 40f,
+                    restitution = 0.4f,
+                    friction = 0.3f,
+                )
+            }
         }
     }
 

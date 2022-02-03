@@ -8,6 +8,8 @@ fun main() {
     Lwjgl3Application(TestGame(), Lwjgl3ApplicationConfiguration().apply {
         setTitle("Robert's Game")
         setWindowedMode(800, 600)
-        setForegroundFPS(0)
+        useVsync(false)
+        setForegroundFPS(240)
+        setIdleFPS(30)
     })
 }

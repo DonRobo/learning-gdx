@@ -9,7 +9,6 @@ import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.ashley.utils.ImmutableArray
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector2
-import com.badlogic.gdx.physics.box2d.BodyDef
 import ktx.ashley.allOf
 import ktx.ashley.get
 import ktx.box2d.body
@@ -17,9 +16,13 @@ import ktx.box2d.box
 import ktx.box2d.createWorld
 import kotlin.math.min
 
-class Box2DSystem : EntitySystem() {
+class Box2DSystem(
+    private val scale: Float = 1f,
+    yDown: Boolean = true
+) : EntitySystem() {
 
-    val world = createWorld(Vector2(0f, 9.81f))
+    private val yDownMultiplicator = if (yDown) -1f else 1f
+    val world = createWorld(Vector2(0f, -9.81f))
 
     private lateinit var entities: ImmutableArray<Entity>
 
@@ -30,20 +33,21 @@ class Box2DSystem : EntitySystem() {
                 val transform = entity[TransformComponent.mapper]!!
                 val rigidBody = entity[RigidBody.mapper]!!
                 rigidBody.body = world.body {
-                    type = BodyDef.BodyType.DynamicBody
+                    type = rigidBody.type
                     box(
                         width = transform.width,
                         height = transform.height,
                     ) {
                         userData = entity
-                        density = 40f
-                        restitution = 0.5f
+                        density = rigidBody.density
+                        restitution = rigidBody.restitution
+                        friction = rigidBody.friction
                     }
                 }
                 rigidBody.body.setTransform(
                     transform.x,
-                    transform.y,
-                    transform.rotationDeg * MathUtils.degreesToRadians
+                    transform.y * yDownMultiplicator * scale,
+                    transform.rotationDeg * MathUtils.degreesToRadians * yDownMultiplicator
                 )
             }
 
@@ -60,9 +64,9 @@ class Box2DSystem : EntitySystem() {
             val transform = it[TransformComponent.mapper]!!
             val body = it[RigidBody.mapper]!!.body
 
-            transform.x = body.position.x
-            transform.y = body.position.y
-            transform.rotationDeg = body.angle * MathUtils.radiansToDegrees
+            transform.x = body.position.x * scale
+            transform.y = body.position.y * yDownMultiplicator * scale
+            transform.rotationDeg = body.angle * MathUtils.radiansToDegrees * yDownMultiplicator
         }
     }
 }
