@@ -16,12 +16,8 @@ import ktx.box2d.box
 import ktx.box2d.createWorld
 import kotlin.math.min
 
-class Box2DSystem(
-    private val scale: Float = 1f,
-    yDown: Boolean = true
-) : EntitySystem() {
+class Box2DSystem() : EntitySystem() {
 
-    private val yDownMultiplicator = if (yDown) -1f else 1f
     val world = createWorld(Vector2(0f, -9.81f))
 
     private lateinit var entities: ImmutableArray<Entity>
@@ -46,8 +42,8 @@ class Box2DSystem(
                 }
                 rigidBody.body.setTransform(
                     transform.x,
-                    transform.y * yDownMultiplicator * scale,
-                    transform.rotationDeg * MathUtils.degreesToRadians * yDownMultiplicator
+                    transform.y,
+                    transform.rotationDeg * MathUtils.degreesToRadians
                 )
             }
 
@@ -64,9 +60,9 @@ class Box2DSystem(
             val transform = it[TransformComponent.mapper]!!
             val body = it[RigidBody.mapper]!!.body
 
-            transform.x = body.position.x * scale
-            transform.y = body.position.y * yDownMultiplicator * scale
-            transform.rotationDeg = body.angle * MathUtils.radiansToDegrees * yDownMultiplicator
+            transform.x = body.position.x
+            transform.y = body.position.y
+            transform.rotationDeg = body.angle * MathUtils.radiansToDegrees
         }
     }
 }

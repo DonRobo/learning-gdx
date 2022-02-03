@@ -3,9 +3,7 @@ package at.robert.game
 import at.robert.game.component.withRigidBody
 import at.robert.game.component.withSpriteComponent
 import at.robert.game.component.withTransformComponent
-import at.robert.game.system.Box2DSystem
-import at.robert.game.system.RenderSystem
-import at.robert.game.system.RotationSystem
+import at.robert.game.system.*
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
@@ -21,7 +19,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite as GdxSprite
 class AshleyGameScreen : KtxScreen {
 
     private var camera = OrthographicCamera().apply {
-        setToOrtho(true, 10f, 10f)
+        setToOrtho(false, 10f, 10f)
         position.set(Vector3.Zero)
     }
 
@@ -47,7 +45,8 @@ class AshleyGameScreen : KtxScreen {
         engine.addSystem(RenderSystem(batch))
         engine.addSystem(RotationSystem())
         engine.addSystem(box2dSystem)
-//        engine.addSystem(Box2DDebugRenderSystem(camera))
+        engine.addSystem(Box2DDebugRenderSystem(camera))
+        engine.addSystem(MouseBox2DInteractionSystem(camera))
 
         box2dSystem.world.body {
             type = BodyDef.BodyType.StaticBody
@@ -72,7 +71,7 @@ class AshleyGameScreen : KtxScreen {
                     width = .3f,
                     height = .3f,
                     rotationDeg = 0f,
-                    y = i * -.20f
+                    y = i * .20f
                 )
                 withRigidBody(
                     type = BodyDef.BodyType.DynamicBody,
