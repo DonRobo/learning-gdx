@@ -51,7 +51,7 @@ class AshleyGameScreen : KtxScreen {
         box2dSystem.world.body {
             type = BodyDef.BodyType.StaticBody
             box(10f, 1f) {}
-            position.set(0f, -3f)
+            position.set(0f, -3.5f)
         }
         box2dSystem.world.body {
             type = BodyDef.BodyType.StaticBody

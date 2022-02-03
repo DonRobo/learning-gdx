@@ -43,7 +43,6 @@ class MouseBox2DInteractionSystem(
                 }
             }
             if (body == null) {
-                println("No body found!")
                 return
             }
 
