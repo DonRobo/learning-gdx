@@ -11,7 +11,10 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import ktx.ashley.allOf
 import ktx.ashley.get
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTime
 
+@OptIn(ExperimentalTime::class)
 class RenderSystem(private val batch: PolygonSpriteBatch, private val shapeRenderer: ShapeRenderer) : EntitySystem(10) {
 
     private lateinit var spriteEntities: ImmutableArray<Entity>
@@ -23,11 +26,21 @@ class RenderSystem(private val batch: PolygonSpriteBatch, private val shapeRende
     }
 
     override fun update(deltaTime: Float) {
-        batch.begin()
-        spriteEntities.forEach { processSpriteEntity(it) }
-        batch.end()
+        measureTime {
+            batch.begin()
+            spriteEntities.forEach { processSpriteEntity(it) }
+            batch.end()
+        }.let {
+            PerformanceMetrics.spriteRenderTime = it
+        }
 
-        placeholderEntities.forEach { processPlaceholderEntity(it) }
+        measureTime {
+            shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
+            placeholderEntities.forEach { processPlaceholderEntity(it) }
+            shapeRenderer.end()
+        }.let {
+            PerformanceMetrics.placeholderRenderTime = it
+        }
     }
 
     private fun processSpriteEntity(entity: Entity) {
@@ -50,7 +63,6 @@ class RenderSystem(private val batch: PolygonSpriteBatch, private val shapeRende
     private fun processPlaceholderEntity(entity: Entity) {
         val transform = entity[TransformComponent.mapper]!!
         shapeRenderer.setColor(0f, 0f, 0f, 1f)
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
         shapeRenderer.rect(
             transform.x - transform.width / 2,
             transform.y - transform.height / 2,
@@ -62,6 +74,5 @@ class RenderSystem(private val batch: PolygonSpriteBatch, private val shapeRende
             1f,
             transform.rotationDeg
         )
-        shapeRenderer.end()
     }
 }

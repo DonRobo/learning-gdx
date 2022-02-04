@@ -4,10 +4,9 @@ import at.robert.game.component.withPlayerControlled
 import at.robert.game.component.withRenderPlaceholder
 import at.robert.game.component.withRigidBody
 import at.robert.game.component.withTransformComponent
-import at.robert.game.system.Box2DSystem
-import at.robert.game.system.PlayerControlSystem
-import at.robert.game.system.RenderSystem
+import at.robert.game.system.*
 import com.badlogic.gdx.graphics.OrthographicCamera
+import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector3
@@ -39,17 +38,21 @@ class AshleyGameScreen : KtxScreen {
     )
     private val batch = PolygonSpriteBatch()
     private val shapeRenderer = ShapeRenderer()
+    private val debugFont = BitmapFont()
 
     init {
         engine.addSystem(Box2DSystem())
         engine.addSystem(PlayerControlSystem())
         engine.addSystem(RenderSystem(batch, shapeRenderer))
+        engine.addSystem(DespawnSystem(30f))
+        engine.addSystem(DebugRenderSystem(batch, debugFont))
+        engine.addSystem(SimpleMoveSystem())
 //        engine.addSystem(Box2DDebugRenderSystem(camera))
 
         engine.entity {
             withPlayerControlled()
             withRenderPlaceholder()
-            withTransformComponent(x = 0f, y = 0f, width = 0.5f, height = 1f)
+            withTransformComponent(x = 0f, y = 0f, width = 0.25f, height = .5f)
             withRigidBody(BodyDef.BodyType.KinematicBody, 40f, 0.1f, 1f)
         }
 
@@ -74,6 +77,8 @@ class AshleyGameScreen : KtxScreen {
 
     override fun dispose() {
         batch.dispose()
+        shapeRenderer.dispose()
+        debugFont.dispose()
         engine.removeAllSystems()
         engine.removeAllEntities()
     }

@@ -15,7 +15,10 @@ import ktx.box2d.body
 import ktx.box2d.box
 import ktx.box2d.createWorld
 import kotlin.math.min
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTime
 
+@OptIn(ExperimentalTime::class)
 class Box2DSystem() : EntitySystem() {
 
     val world = createWorld(Vector2(0f, 0f))
@@ -55,14 +58,18 @@ class Box2DSystem() : EntitySystem() {
     }
 
     override fun update(deltaTime: Float) {
-        world.step(min(1f / 30f, deltaTime), 6, 2)
-        entities.forEach {
-            val transform = it[TransformComponent.mapper]!!
-            val body = it[RigidBody.mapper]!!.body
+        measureTime {
+            world.step(min(1f / 30f, deltaTime), 6, 2)
+            entities.forEach {
+                val transform = it[TransformComponent.mapper]!!
+                val body = it[RigidBody.mapper]!!.body
 
-            transform.x = body.position.x
-            transform.y = body.position.y
-            transform.rotationDeg = body.angle * MathUtils.radiansToDegrees
+                transform.x = body.position.x
+                transform.y = body.position.y
+                transform.rotationDeg = body.angle * MathUtils.radiansToDegrees
+            }
+        }.let {
+            PerformanceMetrics.box2D = it
         }
     }
 }

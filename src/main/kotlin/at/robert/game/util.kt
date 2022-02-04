@@ -1,5 +1,8 @@
 package at.robert.game
 
+import com.badlogic.ashley.utils.ImmutableArray
+import com.badlogic.gdx.math.MathUtils
+
 fun secondsFromNanos(nanos: Long): Float {
     return nanos / 1000000000.0f
 }
@@ -15,3 +18,8 @@ fun PooledEngine(
     componentPoolInitialSize,
     componentPoolMaxSize
 )
+
+fun Float.toRadians() = this * MathUtils.degreesToRadians
+fun Float.toDegrees() = this * MathUtils.radiansToDegrees
+
+fun <T> ImmutableArray<T>.isEmpty(): Boolean = this.size() == 0

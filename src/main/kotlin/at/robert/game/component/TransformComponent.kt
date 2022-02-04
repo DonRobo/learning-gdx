@@ -31,3 +31,9 @@ fun EngineEntity.withTransformComponent(
         this.rotationDeg = rotationDeg
     }
 }
+
+fun TransformComponent.squaredDistanceTo(other: TransformComponent): Float {
+    val dx = x - other.x
+    val dy = y - other.y
+    return dx * dx + dy * dy
+}
