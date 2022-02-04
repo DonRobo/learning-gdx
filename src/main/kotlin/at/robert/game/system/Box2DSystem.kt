@@ -18,7 +18,7 @@ import kotlin.math.min
 
 class Box2DSystem() : EntitySystem() {
 
-    val world = createWorld(Vector2(0f, -9.81f))
+    val world = createWorld(Vector2(0f, 0f))
 
     private lateinit var entities: ImmutableArray<Entity>
 
