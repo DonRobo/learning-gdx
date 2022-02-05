@@ -34,7 +34,7 @@ class AshleyGameScreen : KtxScreen {
         componentPoolMaxSize = 1000,
     )
     private val batch = PolygonSpriteBatch()
-    private val shapeRenderer = ShapeRenderer(100000)
+    private val shapeRenderer = ShapeRenderer()
     private val debugFont = BitmapFont()
 
     init {
