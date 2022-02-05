@@ -34,13 +34,13 @@ class AshleyGameScreen : KtxScreen {
         componentPoolMaxSize = 1000,
     )
     private val batch = PolygonSpriteBatch()
-    private val shapeRenderer = ShapeRenderer()
+    private val shapeRenderer = ShapeRenderer(100000)
     private val debugFont = BitmapFont()
 
     init {
         engine.addSystem(Box2DSystem())
         engine.addSystem(PlayerControlSystem())
-        engine.addSystem(RenderSystem(batch, shapeRenderer))
+        engine.addSystem(RenderSystem(batch, shapeRenderer, camera))
         engine.addSystem(DespawnSystem(30f))
         engine.addSystem(DebugRenderSystem(batch, debugFont))
         engine.addSystem(SimpleMoveSystem())

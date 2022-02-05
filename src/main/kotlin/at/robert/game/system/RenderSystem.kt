@@ -7,6 +7,7 @@ import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.ashley.utils.ImmutableArray
+import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import ktx.ashley.allOf
@@ -15,7 +16,11 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
 @OptIn(ExperimentalTime::class)
-class RenderSystem(private val batch: PolygonSpriteBatch, private val shapeRenderer: ShapeRenderer) : EntitySystem(10) {
+class RenderSystem(
+    private val batch: PolygonSpriteBatch,
+    private val shapeRenderer: ShapeRenderer,
+    private val camera: OrthographicCamera
+) : EntitySystem(10) {
 
     private lateinit var spriteEntities: ImmutableArray<Entity>
     private lateinit var placeholderEntities: ImmutableArray<Entity>
@@ -36,7 +41,14 @@ class RenderSystem(private val batch: PolygonSpriteBatch, private val shapeRende
 
         measureTime {
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)
-            placeholderEntities.forEach { processPlaceholderEntity(it) }
+            placeholderEntities.forEach {
+                val transform = it[TransformComponent.mapper]!!
+                if (transform.x in camera.position.x - camera.viewportWidth / 2f..camera.position.x + camera.viewportWidth / 2f &&
+                    transform.y in camera.position.y - camera.viewportHeight / 2f..camera.position.y + camera.viewportHeight / 2f
+                ) {
+                    processPlaceholderEntity(transform)
+                }
+            }
             shapeRenderer.end()
         }.let {
             PerformanceMetrics.placeholderRenderTime = it
@@ -60,8 +72,7 @@ class RenderSystem(private val batch: PolygonSpriteBatch, private val shapeRende
         )
     }
 
-    private fun processPlaceholderEntity(entity: Entity) {
-        val transform = entity[TransformComponent.mapper]!!
+    private fun processPlaceholderEntity(transform: TransformComponent) {
         shapeRenderer.setColor(0f, 0f, 0f, 1f)
         shapeRenderer.rect(
             transform.x - transform.width / 2,

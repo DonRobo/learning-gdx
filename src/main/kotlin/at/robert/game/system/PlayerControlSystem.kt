@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import ktx.ashley.allOf
 import ktx.ashley.entity
 import ktx.ashley.get
-import ktx.math.vec2
+import kotlin.math.roundToInt
 
 class PlayerControlSystem : IteratingSystem(
     allOf(
@@ -60,7 +60,7 @@ class PlayerControlSystem : IteratingSystem(
             }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-            for (i in 0 until 50) {
+            for (i in 0 until (5000 * deltaTime).roundToInt()) {
                 val angle = 360f * MathUtils.random()
                 engine.entity {
                     withRenderPlaceholder()
@@ -71,9 +71,10 @@ class PlayerControlSystem : IteratingSystem(
                         height = 0.05f,
                         rotationDeg = angle
                     )
-                    withRigidBody(BodyDef.BodyType.KinematicBody, 40f, 0.1f, 1f).apply {
-                        initialVelocity = vec2(5f * MathUtils.cosDeg(angle), 5f * MathUtils.sinDeg(angle))
-                    }
+                    withMovingComponent(1f, angle)
+//                    withRigidBody(BodyDef.BodyType.KinematicBody, 40f, 0.1f, 1f).apply {
+//                        initialVelocity = vec2(5f * MathUtils.cosDeg(angle), 5f * MathUtils.sinDeg(angle))
+//                    }
                 }
             }
         }
