@@ -1,9 +1,6 @@
 package at.robert.game
 
-import at.robert.game.component.withPlayerControlled
-import at.robert.game.component.withRenderPlaceholder
-import at.robert.game.component.withRigidBody
-import at.robert.game.component.withTransformComponent
+import at.robert.game.component.*
 import at.robert.game.system.*
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
@@ -47,6 +44,7 @@ class AshleyGameScreen : KtxScreen {
         engine.addSystem(DespawnSystem(30f))
         engine.addSystem(DebugRenderSystem(batch, debugFont))
         engine.addSystem(SimpleMoveSystem())
+        engine.addSystem(EnemySystem())
 //        engine.addSystem(Box2DDebugRenderSystem(camera))
 
         engine.entity {
@@ -59,7 +57,8 @@ class AshleyGameScreen : KtxScreen {
         engine.entity {
             withRenderPlaceholder()
             withTransformComponent(x = 3f, y = 0f, width = 0.25f, height = .5f)
-            withRigidBody(BodyDef.BodyType.DynamicBody, 40f, 0.1f, 1f)
+            withRigidBody(BodyDef.BodyType.KinematicBody, 40f, 0.1f, 1f)
+            withMoveTowardsPlayer(1f)
         }
     }
 

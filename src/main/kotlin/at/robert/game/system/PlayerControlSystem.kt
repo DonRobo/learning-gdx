@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import ktx.ashley.allOf
 import ktx.ashley.entity
 import ktx.ashley.get
+import ktx.math.vec2
 
 class PlayerControlSystem : IteratingSystem(
     allOf(
@@ -55,6 +56,7 @@ class PlayerControlSystem : IteratingSystem(
                     height = 0.05f + MathUtils.random() * 0.5f,
                 )
                 withRigidBody(BodyDef.BodyType.DynamicBody, 40f, 0.1f, 1f)
+                withMoveTowardsPlayer(3f)
             }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
@@ -69,7 +71,9 @@ class PlayerControlSystem : IteratingSystem(
                         height = 0.05f,
                         rotationDeg = angle
                     )
-                    withMovingComponent(speed = 5f, direction = angle)
+                    withRigidBody(BodyDef.BodyType.KinematicBody, 40f, 0.1f, 1f).apply {
+                        initialVelocity = vec2(5f * MathUtils.cosDeg(angle), 5f * MathUtils.sinDeg(angle))
+                    }
                 }
             }
         }

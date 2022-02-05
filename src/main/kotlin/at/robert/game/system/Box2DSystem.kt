@@ -19,7 +19,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
 @OptIn(ExperimentalTime::class)
-class Box2DSystem() : EntitySystem() {
+class Box2DSystem : EntitySystem() {
 
     val world = createWorld(Vector2(0f, 0f))
 
@@ -48,6 +48,7 @@ class Box2DSystem() : EntitySystem() {
                     transform.y,
                     transform.rotationDeg * MathUtils.degreesToRadians
                 )
+                rigidBody.body.linearVelocity = rigidBody.initialVelocity
             }
 
             override fun entityRemoved(entity: Entity) {
