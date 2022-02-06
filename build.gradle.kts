@@ -17,6 +17,11 @@ val ktxVersion = "1.10.0-rc1"
 val gdxControllersVersion = "2.2.1"
 val ashleyVersion = "1.7.4"
 
+repositories {
+    mavenCentral()
+    maven("https://jitpack.io")
+}
+
 dependencies {
     implementation("com.badlogicgames.gdx:gdx:$gdxVersion")
     implementation("com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion")
@@ -25,6 +30,8 @@ dependencies {
     implementation("com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop")
     implementation("com.badlogicgames.gdx:gdx-box2d:$gdxVersion")
     implementation("com.badlogicgames.ashley:ashley:$ashleyVersion")
+
+    implementation("com.github.implicit-invocation:jbump:v1.0.2")
 
     implementation("io.github.libktx:ktx-ashley:$ktxVersion")
     implementation("io.github.libktx:ktx-app:$ktxVersion")

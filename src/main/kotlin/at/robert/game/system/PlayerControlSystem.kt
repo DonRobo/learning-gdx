@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef
 import ktx.ashley.allOf
 import ktx.ashley.entity
 import ktx.ashley.get
+import ktx.math.vec2
 import kotlin.math.roundToInt
 
 class PlayerControlSystem : IteratingSystem(
@@ -48,7 +49,6 @@ class PlayerControlSystem : IteratingSystem(
             val y = distance * MathUtils.sinDeg(angle) + kinetic.body.position.y
 
             engine.entity {
-                withRenderPlaceholder()
                 withTransformComponent(
                     x = x,
                     y = y,
@@ -57,13 +57,15 @@ class PlayerControlSystem : IteratingSystem(
                 )
                 withRigidBody(BodyDef.BodyType.DynamicBody, 40f, 0.1f, 1f)
                 withMoveTowardsPlayer(3f)
+                withDungeonTileSprite(
+                    "crate",
+                )
             }
         }
         if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
             for (i in 0 until (5000 * deltaTime).roundToInt()) {
                 val angle = 360f * MathUtils.random()
                 engine.entity {
-                    withRenderPlaceholder()
                     withTransformComponent(
                         x = kinetic.body.position.x,
                         y = kinetic.body.position.y,
@@ -71,10 +73,16 @@ class PlayerControlSystem : IteratingSystem(
                         height = 0.05f,
                         rotationDeg = angle
                     )
-                    withMovingComponent(1f, angle)
-//                    withRigidBody(BodyDef.BodyType.KinematicBody, 40f, 0.1f, 1f).apply {
-//                        initialVelocity = vec2(5f * MathUtils.cosDeg(angle), 5f * MathUtils.sinDeg(angle))
-//                    }
+                    withDungeonTileSprite(
+                        "coin_anim",
+                        animationFrames = 4,
+                        animationSpeed = 1.5f,
+                        animationProgress = 4f * MathUtils.random(),
+                    )
+//                    withMovingComponent(1f, angle)
+                    withRigidBody(BodyDef.BodyType.KinematicBody, 40f, 0.1f, 1f).apply {
+                        initialVelocity = vec2(5f * MathUtils.cosDeg(angle), 5f * MathUtils.sinDeg(angle))
+                    }
                 }
             }
         }

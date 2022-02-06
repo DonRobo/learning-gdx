@@ -49,16 +49,24 @@ class AshleyGameScreen : KtxScreen {
 
         engine.entity {
             withPlayerControlled()
-            withRenderPlaceholder()
             withTransformComponent(x = 0f, y = 0f, width = 0.25f, height = .5f)
             withRigidBody(BodyDef.BodyType.KinematicBody, 40f, 0.1f, 1f)
+            withDungeonTileSprite(
+                "wizzard_m_run_anim",
+                animationFrames = 4,
+                animationSpeed = 2f,
+            )
         }
 
         engine.entity {
-            withRenderPlaceholder()
-            withTransformComponent(x = 3f, y = 0f, width = 0.25f, height = .5f)
+            withTransformComponent(x = 3f, y = 0f, width = 0.5f, height = .5f)
             withRigidBody(BodyDef.BodyType.KinematicBody, 40f, 0.1f, 1f)
             withMoveTowardsPlayer(1f)
+            withDungeonTileSprite(
+                sprite = "masked_orc_run_anim",
+                animationFrames = 4,
+                animationSpeed = 2f,
+            )
         }
     }
 
