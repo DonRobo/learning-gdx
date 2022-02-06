@@ -1,7 +1,7 @@
 package at.robert.game.system
 
 import at.robert.game.component.DontDespawn
-import at.robert.game.component.PlayerControlled
+import at.robert.game.component.Player
 import at.robert.game.component.TransformComponent
 import at.robert.game.component.squaredDistanceTo
 import com.badlogic.ashley.core.ComponentMapper
@@ -17,13 +17,13 @@ import kotlin.time.measureTime
 @OptIn(ExperimentalTime::class)
 class DespawnSystem(
     var maxDistance: Float = 100f
-) : IteratingSystem(allOf(TransformComponent::class).exclude(DontDespawn::class, PlayerControlled::class).get()) {
+) : IteratingSystem(allOf(TransformComponent::class).exclude(DontDespawn::class, Player::class).get()) {
 
     private lateinit var players: ImmutableArray<Entity>
 
     override fun addedToEngine(engine: Engine) {
         super.addedToEngine(engine)
-        players = engine.getEntitiesFor(allOf(PlayerControlled::class).get())
+        players = engine.getEntitiesFor(allOf(Player::class).get())
     }
 
     private val tm = ComponentMapper.getFor(TransformComponent::class.java)

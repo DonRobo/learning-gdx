@@ -1,7 +1,7 @@
 package at.robert.game.system
 
 import at.robert.game.component.CollidingComponent
-import at.robert.game.component.PlayerControlled
+import at.robert.game.component.Player
 import at.robert.game.component.TransformComponent
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
@@ -12,7 +12,7 @@ import ktx.ashley.get
 
 class PlayerControlSystem : IteratingSystem(
     allOf(
-        PlayerControlled::class,
+        Player::class,
     ).get(),
     5
 ) {
@@ -34,7 +34,7 @@ class PlayerControlSystem : IteratingSystem(
             Gdx.input.isKeyPressed(Input.Keys.A),
         )
 
-        val pc = entity[PlayerControlled.mapper]!!
+        val pc = entity[Player.mapper]!!
         val chosenDirection: Int = when {
             pc.currentDirection >= 0 && priorityDirection[pc.currentDirection] -> pc.currentDirection
             priorityDirection.any { it } -> priorityDirection.indexOf(true)

@@ -12,7 +12,7 @@ fun PlayerEntity(
         width = 1f,
         height = (28f / 16f),
     )
-    withPlayerControlled()
+    withPlayer()
     withColliding(
         -0.4f,
         0.4f,

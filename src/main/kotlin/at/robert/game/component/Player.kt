@@ -5,13 +5,14 @@ import ktx.ashley.EngineEntity
 import ktx.ashley.Mapper
 import ktx.ashley.with
 
-class PlayerControlled : Component {
+class Player : Component {
     var currentDirection = 0
-    companion object : Mapper<PlayerControlled>()
+
+    companion object : Mapper<Player>()
 }
 
-fun EngineEntity.withPlayerControlled() {
-    with<PlayerControlled> {
+fun EngineEntity.withPlayer() {
+    with<Player> {
         currentDirection = 0
     }
 }
