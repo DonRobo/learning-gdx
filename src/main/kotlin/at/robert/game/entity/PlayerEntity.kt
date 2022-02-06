@@ -20,7 +20,7 @@ fun PlayerEntity(
         -.4f
     )
     withDungeonTileSprite(
-        "wizzard_m_run_anim",
+        "wizard_m_run_anim",
         animationFrames = 4,
         animationSpeed = 2f,
     )

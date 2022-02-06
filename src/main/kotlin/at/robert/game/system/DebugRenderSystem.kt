@@ -8,6 +8,7 @@ import kotlin.math.roundToInt
 import kotlin.time.Duration
 
 object PerformanceMetrics {
+    var renderModeSwitches: Int = 0
     var despawnSystem: Duration? = null
     var renderTime: Duration? = null
     var physics: Duration? = null
@@ -34,6 +35,12 @@ class DebugRenderSystem(
         font.draw(
             spriteBatch,
             "Render time: ${PerformanceMetrics.renderTime}",
+            10f,
+            Gdx.graphics.height - currentPos
+        ).also { currentPos += lineDistance }
+        font.draw(
+            spriteBatch,
+            "Render mode switches: ${PerformanceMetrics.renderModeSwitches}",
             10f,
             Gdx.graphics.height - currentPos
         ).also { currentPos += lineDistance }
