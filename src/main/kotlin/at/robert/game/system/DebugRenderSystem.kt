@@ -4,14 +4,15 @@ import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
+import kotlin.math.roundToInt
 import kotlin.time.Duration
 
 object PerformanceMetrics {
     var despawnSystem: Duration? = null
-    var spriteRenderTime: Duration? = null
-    var placeholderRenderTime: Duration? = null
+    var renderTime: Duration? = null
     var physics: Duration? = null
     var jbumpCells: Int? = null
+    var overallTime: Duration? = null
 }
 
 class DebugRenderSystem(
@@ -32,13 +33,7 @@ class DebugRenderSystem(
             .also { currentPos += lineDistance }
         font.draw(
             spriteBatch,
-            "SpriteRenderSystem: ${PerformanceMetrics.spriteRenderTime}",
-            10f,
-            Gdx.graphics.height - currentPos
-        ).also { currentPos += lineDistance }
-        font.draw(
-            spriteBatch,
-            "PlaceholderRenderSystem: ${PerformanceMetrics.placeholderRenderTime}",
+            "Render time: ${PerformanceMetrics.renderTime}",
             10f,
             Gdx.graphics.height - currentPos
         ).also { currentPos += lineDistance }
@@ -51,6 +46,12 @@ class DebugRenderSystem(
         font.draw(spriteBatch, "Physics: ${PerformanceMetrics.physics}", 10f, Gdx.graphics.height - currentPos)
             .also { currentPos += lineDistance }
         font.draw(spriteBatch, "JBump cells: ${PerformanceMetrics.jbumpCells}", 10f, Gdx.graphics.height - currentPos)
+            .also { currentPos += lineDistance }
+        font.draw(spriteBatch, "Overall time: ${PerformanceMetrics.overallTime}", 10f, Gdx.graphics.height - currentPos)
+            .also { currentPos += lineDistance }
+        val theoreticalFps =
+            (1000000f / (PerformanceMetrics.overallTime?.inWholeMicroseconds?.toFloat() ?: 100f)).roundToInt()
+        font.draw(spriteBatch, "Theoretical FPS: $theoreticalFps", 10f, Gdx.graphics.height - currentPos)
             .also { currentPos += lineDistance }
         spriteBatch.end()
 

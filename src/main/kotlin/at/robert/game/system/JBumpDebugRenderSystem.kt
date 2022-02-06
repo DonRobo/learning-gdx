@@ -9,7 +9,7 @@ import ktx.ashley.getSystem
 class JBumpDebugRenderSystem(
     private val camera: OrthographicCamera,
     private val shapeRenderer: ShapeRenderer,
-) : EntitySystem() {
+) : EntitySystem(11) {
 
 
     override fun update(deltaTime: Float) {

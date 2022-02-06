@@ -11,6 +11,7 @@ class DungeonTileSprite(
     var animationFrames: Int = 1,
     var animationProgress: Float = 0f,
     var animationSpeed: Float = 1f,
+    //TODO store this in renderer and only index here
     var textureRegion: Array<TextureRegion>? = null
 ) : Component {
     companion object : Mapper<DungeonTileSprite>()

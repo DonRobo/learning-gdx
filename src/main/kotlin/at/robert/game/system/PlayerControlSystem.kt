@@ -1,5 +1,6 @@
 package at.robert.game.system
 
+import at.robert.game.component.CollidingComponent
 import at.robert.game.component.PlayerControlled
 import at.robert.game.component.TransformComponent
 import com.badlogic.ashley.core.Entity
@@ -18,7 +19,7 @@ class PlayerControlSystem : IteratingSystem(
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val transformComponent = entity[TransformComponent.mapper]!!
 
-        val speed = 2f
+        val speed = 8f
 
         val priorityDirection = arrayOf(
             Gdx.input.isKeyJustPressed(Input.Keys.W),
@@ -48,6 +49,10 @@ class PlayerControlSystem : IteratingSystem(
             1 -> transformComponent.x += speed * deltaTime
             2 -> transformComponent.y -= speed * deltaTime
             3 -> transformComponent.x -= speed * deltaTime
+        }
+        val colliding = entity[CollidingComponent.mapper]
+        if (colliding != null && chosenDirection >= 0) {
+            colliding.moved = true
         }
     }
 }

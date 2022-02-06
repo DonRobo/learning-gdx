@@ -1,5 +1,7 @@
 package at.robert.game
 
+import at.robert.game.entity.ColumnTile
+import at.robert.game.entity.FloorTile
 import at.robert.game.entity.PlayerEntity
 import at.robert.game.entity.addEntity
 import at.robert.game.system.*
@@ -10,11 +12,16 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector3
 import ktx.app.KtxScreen
 import ktx.app.clearScreen
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTime
 
+@OptIn(ExperimentalTime::class)
 class AshleyGameScreen : KtxScreen {
 
+    private val cameraWidth = 50f
+
     private var camera = OrthographicCamera().apply {
-        setToOrtho(false, 10f, 10f)
+        setToOrtho(false, cameraWidth, cameraWidth)
         position.set(Vector3.Zero)
     }
 
@@ -44,18 +51,30 @@ class AshleyGameScreen : KtxScreen {
 
         engine.addEntity(PlayerEntity())
 
+        for (y in -10 until 10) {
+            for (x in -10 until 10) {
+                engine.addEntity(FloorTile(x, y))
+            }
+        }
+
+        engine.addEntity(ColumnTile(3, 3))
+
     }
 
 
     override fun render(delta: Float) {
-        clearScreen(0.8f, 0.8f, 0.8f)
-        batch.projectionMatrix = camera.combined
-        shapeRenderer.projectionMatrix = camera.combined
-        engine.update(delta)
+        measureTime {
+            clearScreen(0f, 0f, 0f, 1f)
+            batch.projectionMatrix = camera.combined
+            shapeRenderer.projectionMatrix = camera.combined
+            engine.update(delta)
+        }.let {
+            PerformanceMetrics.overallTime = it
+        }
     }
 
     override fun resize(width: Int, height: Int) {
-        setCamera(10f, width.toFloat() / height.toFloat())
+        setCamera(cameraWidth, width.toFloat() / height.toFloat())
     }
 
     override fun dispose() {
