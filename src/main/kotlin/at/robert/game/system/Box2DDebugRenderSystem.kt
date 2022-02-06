@@ -19,7 +19,7 @@ class Box2DDebugRenderSystem(
     )
 
     override fun update(deltaTime: Float) {
-        val box2d = engine.getSystem<Box2DSystem>()
-        debugRenderer.render(box2d.world, camera.combined)
+        val physicsSystem = engine.getSystem<PhysicsSystem>()
+        debugRenderer.render(physicsSystem.box2DWorld, camera.combined)
     }
 }

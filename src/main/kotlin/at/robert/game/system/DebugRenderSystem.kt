@@ -11,7 +11,8 @@ object PerformanceMetrics {
     var despawnSystem: Duration? = null
     var spriteRenderTime: Duration? = null
     var placeholderRenderTime: Duration? = null
-    var box2D: Duration? = null
+    var physics: Duration? = null
+    var jbumpCells: Int? = null
 }
 
 class DebugRenderSystem(
@@ -45,7 +46,8 @@ class DebugRenderSystem(
             Gdx.graphics.height - 90f
         )
         font.draw(spriteBatch, "DespawnSystem: ${PerformanceMetrics.despawnSystem}", 10f, Gdx.graphics.height - 110f)
-        font.draw(spriteBatch, "Box2D: ${PerformanceMetrics.box2D}", 10f, Gdx.graphics.height - 130f)
+        font.draw(spriteBatch, "Physics: ${PerformanceMetrics.physics}", 10f, Gdx.graphics.height - 130f)
+        font.draw(spriteBatch, "JBump cells: ${PerformanceMetrics.jbumpCells}", 10f, Gdx.graphics.height - 150f)
         spriteBatch.end()
 
         spriteBatch.projectionMatrix = oldProjectionMatrix

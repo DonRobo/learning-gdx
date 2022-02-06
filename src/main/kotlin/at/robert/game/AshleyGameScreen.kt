@@ -38,7 +38,7 @@ class AshleyGameScreen : KtxScreen {
     private val debugFont = BitmapFont()
 
     init {
-        engine.addSystem(Box2DSystem())
+        engine.addSystem(PhysicsSystem())
         engine.addSystem(PlayerControlSystem())
         engine.addSystem(RenderSystem(batch, shapeRenderer, camera))
         engine.addSystem(DespawnSystem(30f))
@@ -46,6 +46,7 @@ class AshleyGameScreen : KtxScreen {
         engine.addSystem(SimpleMoveSystem())
         engine.addSystem(EnemySystem())
 //        engine.addSystem(Box2DDebugRenderSystem(camera))
+//        engine.addSystem(JBumpDebugRenderSystem(camera, shapeRenderer))
 
         engine.entity {
             withPlayerControlled()
@@ -67,6 +68,7 @@ class AshleyGameScreen : KtxScreen {
                 animationFrames = 4,
                 animationSpeed = 2f,
             )
+            withSimpleRigidBody()
         }
     }
 

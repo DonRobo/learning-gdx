@@ -15,7 +15,7 @@ class MouseBox2DInteractionSystem(
     private val camera: OrthographicCamera,
 ) : EntitySystem() {
 
-    private lateinit var box2d: Box2DSystem
+    private lateinit var box2d: PhysicsSystem
 
     private var body: Body? = null
 
@@ -34,7 +34,7 @@ class MouseBox2DInteractionSystem(
             )
 
             var body: Body? = null
-            box2d.world.query(pos.x, pos.y, pos.x, pos.y) {
+            box2d.box2DWorld.query(pos.x, pos.y, pos.x, pos.y) {
                 if (body == null && it.body.type == BodyDef.BodyType.DynamicBody && it.testPoint(pos.x, pos.y)) {
                     body = it.body
                     true
