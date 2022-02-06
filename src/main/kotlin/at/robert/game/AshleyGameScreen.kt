@@ -1,16 +1,15 @@
 package at.robert.game
 
-import at.robert.game.component.*
+import at.robert.game.entity.PlayerEntity
+import at.robert.game.entity.addEntity
 import at.robert.game.system.*
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.Vector3
-import com.badlogic.gdx.physics.box2d.BodyDef
 import ktx.app.KtxScreen
 import ktx.app.clearScreen
-import ktx.ashley.entity
 
 class AshleyGameScreen : KtxScreen {
 
@@ -25,8 +24,6 @@ class AshleyGameScreen : KtxScreen {
         camera.viewportWidth = width
         camera.viewportHeight = height
         camera.update()
-
-        println("Camera: $width x ${width / aspectRatio}")
     }
 
     private val engine = PooledEngine(
@@ -43,33 +40,10 @@ class AshleyGameScreen : KtxScreen {
         engine.addSystem(RenderSystem(batch, shapeRenderer, camera))
         engine.addSystem(DespawnSystem(30f))
         engine.addSystem(DebugRenderSystem(batch, debugFont))
-        engine.addSystem(SimpleMoveSystem())
-        engine.addSystem(EnemySystem())
-//        engine.addSystem(Box2DDebugRenderSystem(camera))
 //        engine.addSystem(JBumpDebugRenderSystem(camera, shapeRenderer))
 
-        engine.entity {
-            withPlayerControlled()
-            withTransformComponent(x = 0f, y = 0f, width = 0.25f, height = .5f)
-            withRigidBody(BodyDef.BodyType.KinematicBody, 40f, 0.1f, 1f)
-            withDungeonTileSprite(
-                "wizzard_m_run_anim",
-                animationFrames = 4,
-                animationSpeed = 2f,
-            )
-        }
+        engine.addEntity(PlayerEntity())
 
-        engine.entity {
-            withTransformComponent(x = 3f, y = 0f, width = 0.5f, height = .5f)
-            withRigidBody(BodyDef.BodyType.KinematicBody, 40f, 0.1f, 1f)
-            withMoveTowardsPlayer(1f)
-            withDungeonTileSprite(
-                sprite = "masked_orc_run_anim",
-                animationFrames = 4,
-                animationSpeed = 2f,
-            )
-            withSimpleRigidBody()
-        }
     }
 
 

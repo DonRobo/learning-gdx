@@ -1,90 +1,53 @@
 package at.robert.game.system
 
-import at.robert.game.component.*
+import at.robert.game.component.PlayerControlled
+import at.robert.game.component.TransformComponent
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
-import com.badlogic.gdx.math.MathUtils
-import com.badlogic.gdx.physics.box2d.BodyDef
 import ktx.ashley.allOf
-import ktx.ashley.entity
 import ktx.ashley.get
 
 class PlayerControlSystem : IteratingSystem(
     allOf(
-        RigidBody::class,
         PlayerControlled::class,
-    ).get()
+    ).get(),
+    5
 ) {
     override fun processEntity(entity: Entity, deltaTime: Float) {
-        val kinetic = entity[RigidBody.mapper]!!
+        val transformComponent = entity[TransformComponent.mapper]!!
 
-        var xV = 0f
-        var yV = 0f
+        val speed = 2f
 
-        val speed = 3f
+        val priorityDirection = arrayOf(
+            Gdx.input.isKeyJustPressed(Input.Keys.W),
+            Gdx.input.isKeyJustPressed(Input.Keys.D),
+            Gdx.input.isKeyJustPressed(Input.Keys.S),
+            Gdx.input.isKeyJustPressed(Input.Keys.A),
+        )
+        val regularDirection = arrayOf(
+            Gdx.input.isKeyPressed(Input.Keys.W),
+            Gdx.input.isKeyPressed(Input.Keys.D),
+            Gdx.input.isKeyPressed(Input.Keys.S),
+            Gdx.input.isKeyPressed(Input.Keys.A),
+        )
 
-        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            xV += speed
+        val pc = entity[PlayerControlled.mapper]!!
+        val chosenDirection: Int = when {
+            pc.currentDirection >= 0 && priorityDirection[pc.currentDirection] -> pc.currentDirection
+            priorityDirection.any { it } -> priorityDirection.indexOf(true)
+            pc.currentDirection >= 0 && regularDirection[pc.currentDirection] -> pc.currentDirection
+            regularDirection.any { it } -> regularDirection.indexOf(true)
+            else -> -1
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            xV -= speed
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            yV += speed
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            yV -= speed
-        }
 
-        kinetic.body.setLinearVelocity(xV, yV)
-
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            val distance = 1f
-            val angle = 360f * MathUtils.random()
-            val x = distance * MathUtils.cosDeg(angle) + kinetic.body.position.x
-            val y = distance * MathUtils.sinDeg(angle) + kinetic.body.position.y
-
-            engine.entity {
-                withTransformComponent(
-                    x = x,
-                    y = y,
-                    width = 0.05f + MathUtils.random() * 0.5f,
-                    height = 0.05f + MathUtils.random() * 0.5f,
-                )
-                withRigidBody(BodyDef.BodyType.DynamicBody, 40f, 0.1f, 1f)
-                withMoveTowardsPlayer(3f)
-                withDungeonTileSprite(
-                    "crate",
-                )
-            }
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-            for (i in 0 until 1/*(5000 * deltaTime).roundToInt()*/) {
-                val angle = 360f * MathUtils.random()
-                engine.entity {
-                    withTransformComponent(
-                        x = kinetic.body.position.x,
-                        y = kinetic.body.position.y,
-                        width = 0.05f,
-                        height = 0.05f,
-                        rotationDeg = angle
-                    )
-                    withDungeonTileSprite(
-                        "coin_anim",
-                        animationFrames = 4,
-                        animationSpeed = 1.5f,
-                        animationProgress = 4f * MathUtils.random(),
-                    )
-                    withMovingComponent(1f, angle)
-                    withSimpleRigidBody()
-//                    withRigidBody(BodyDef.BodyType.KinematicBody, 40f, 0.1f, 1f).apply {
-//                        initialVelocity = vec2(5f * MathUtils.cosDeg(angle), 5f * MathUtils.sinDeg(angle))
-//                    }
-
-                }
-            }
+        pc.currentDirection = chosenDirection
+        when (chosenDirection) {
+            0 -> transformComponent.y += speed * deltaTime
+            1 -> transformComponent.x += speed * deltaTime
+            2 -> transformComponent.y -= speed * deltaTime
+            3 -> transformComponent.x -= speed * deltaTime
         }
     }
 }

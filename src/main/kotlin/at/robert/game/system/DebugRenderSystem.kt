@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import kotlin.time.Duration
 
 object PerformanceMetrics {
-    var simpleMoveSystem: Duration? = null
     var despawnSystem: Duration? = null
     var spriteRenderTime: Duration? = null
     var placeholderRenderTime: Duration? = null
@@ -25,29 +24,34 @@ class DebugRenderSystem(
         spriteBatch.projectionMatrix.setToOrtho2D(0f, 0f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
 
         spriteBatch.begin()
-        font.draw(spriteBatch, "FPS: ${Gdx.graphics.framesPerSecond}", 10f, Gdx.graphics.height - 10f)
-        font.draw(spriteBatch, "Entities: ${engine.entities.size()}", 10f, Gdx.graphics.height - 30f)
-        font.draw(
-            spriteBatch,
-            "SimpleMoveSystem: ${PerformanceMetrics.simpleMoveSystem}",
-            10f,
-            Gdx.graphics.height - 50f
-        )
+        var currentPos = 10f
+        val lineDistance = 20f
+        font.draw(spriteBatch, "FPS: ${Gdx.graphics.framesPerSecond}", 10f, Gdx.graphics.height - currentPos)
+            .also { currentPos += lineDistance }
+        font.draw(spriteBatch, "Entities: ${engine.entities.size()}", 10f, Gdx.graphics.height - currentPos)
+            .also { currentPos += lineDistance }
         font.draw(
             spriteBatch,
             "SpriteRenderSystem: ${PerformanceMetrics.spriteRenderTime}",
             10f,
-            Gdx.graphics.height - 70f
-        )
+            Gdx.graphics.height - currentPos
+        ).also { currentPos += lineDistance }
         font.draw(
             spriteBatch,
             "PlaceholderRenderSystem: ${PerformanceMetrics.placeholderRenderTime}",
             10f,
-            Gdx.graphics.height - 90f
-        )
-        font.draw(spriteBatch, "DespawnSystem: ${PerformanceMetrics.despawnSystem}", 10f, Gdx.graphics.height - 110f)
-        font.draw(spriteBatch, "Physics: ${PerformanceMetrics.physics}", 10f, Gdx.graphics.height - 130f)
-        font.draw(spriteBatch, "JBump cells: ${PerformanceMetrics.jbumpCells}", 10f, Gdx.graphics.height - 150f)
+            Gdx.graphics.height - currentPos
+        ).also { currentPos += lineDistance }
+        font.draw(
+            spriteBatch,
+            "DespawnSystem: ${PerformanceMetrics.despawnSystem}",
+            10f,
+            Gdx.graphics.height - currentPos
+        ).also { currentPos += lineDistance }
+        font.draw(spriteBatch, "Physics: ${PerformanceMetrics.physics}", 10f, Gdx.graphics.height - currentPos)
+            .also { currentPos += lineDistance }
+        font.draw(spriteBatch, "JBump cells: ${PerformanceMetrics.jbumpCells}", 10f, Gdx.graphics.height - currentPos)
+            .also { currentPos += lineDistance }
         spriteBatch.end()
 
         spriteBatch.projectionMatrix = oldProjectionMatrix

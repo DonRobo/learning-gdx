@@ -6,9 +6,12 @@ import ktx.ashley.Mapper
 import ktx.ashley.with
 
 class PlayerControlled : Component {
+    var currentDirection = 0
     companion object : Mapper<PlayerControlled>()
 }
 
 fun EngineEntity.withPlayerControlled() {
-    with<PlayerControlled>()
+    with<PlayerControlled> {
+        currentDirection = 0
+    }
 }

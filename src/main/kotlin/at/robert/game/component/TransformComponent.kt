@@ -11,7 +11,6 @@ class TransformComponent(
     var y: Float = 0f,
     var width: Float = 1f,
     var height: Float = 1f,
-    var rotationDeg: Float = 0f,
 ) : Component {
     companion object : Mapper<TransformComponent>()
 }
@@ -21,14 +20,12 @@ fun EngineEntity.withTransformComponent(
     y: Float = 0f,
     width: Float,
     height: Float,
-    rotationDeg: Float = 0f,
 ) {
     with<TransformComponent> {
         this.x = x
         this.y = y
         this.width = width
         this.height = height
-        this.rotationDeg = rotationDeg
     }
 }
 

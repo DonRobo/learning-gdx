@@ -16,6 +16,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import ktx.ashley.allOf
 import ktx.ashley.get
+import kotlin.math.min
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
@@ -107,7 +108,10 @@ class RenderSystem(
 
                     processSpriteEntity(
                         transform,
-                        dungeonSpriteComponent.textureRegion!![dungeonSpriteComponent.animationProgress.toInt()]
+                        dungeonSpriteComponent.textureRegion!![min(
+                            dungeonSpriteComponent.animationProgress.toInt(),
+                            dungeonSpriteComponent.animationFrames - 1
+                        )]
                     )
                 }
             }
@@ -128,7 +132,7 @@ class RenderSystem(
             transform.height,
             1f,
             1f,
-            transform.rotationDeg
+            0f,
         )
     }
 
@@ -143,7 +147,7 @@ class RenderSystem(
             transform.height,
             1f,
             1f,
-            transform.rotationDeg
+            0f,
         )
     }
 
