@@ -1,5 +1,6 @@
 package at.robert.game.render
 
+import at.robert.game.ResourceManager
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -11,6 +12,7 @@ enum class RenderState {
 class RenderEngine(
     val spriteBatch: PolygonSpriteBatch,
     val shapeRenderer: ShapeRenderer,
+    val resourceManager: ResourceManager,
 ) {
     private var currentState = RenderState.NONE
 

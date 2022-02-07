@@ -1,10 +1,13 @@
 package at.robert.game.system
 
-import at.robert.game.component.*
-import at.robert.game.render.*
+import at.robert.game.ResourceManager
+import at.robert.game.component.CollidingComponent
+import at.robert.game.component.Renderable
+import at.robert.game.component.TransformComponent
+import at.robert.game.render.RenderEngine
+import at.robert.game.render.RenderState
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.SortedIteratingSystem
-import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
@@ -19,7 +22,7 @@ class RenderSystem(
     batch: PolygonSpriteBatch,
     shapeRenderer: ShapeRenderer,
     private val camera: OrthographicCamera,
-    private val assetManager: AssetManager,
+    resourceManager: ResourceManager,
 ) : SortedIteratingSystem(
     allOf(Renderable::class).get(),
     Comparator<Entity> { o1, o2 ->
@@ -60,10 +63,7 @@ class RenderSystem(
         return this
     }
 
-    private val renderEngine = RenderEngine(batch, shapeRenderer)
-    private val spriteRenderer = SpriteRenderer(renderEngine)
-    private val dungeonRenderer = DungeonSpriteRenderer(spriteRenderer).register()
-    private val placeholderRenderer = PlaceholderRenderer(renderEngine)
+    private val renderEngine = RenderEngine(batch, shapeRenderer, resourceManager)
 
     init {
         batch.register()
@@ -87,16 +87,8 @@ class RenderSystem(
         val transform = entity[TransformComponent.mapper]
         if (transform != null && !transform.isVisible()) return
 
-        val placeholder = entity[RenderPlaceholder.mapper]
-        val dungeonTileSprite = entity[DungeonTileSprite.mapper]
-        val spriteComponent = entity[SpriteComponent.mapper]
-
-        when {
-            spriteComponent != null -> spriteRenderer.render(transform!!, spriteComponent.textureRegion)
-            dungeonTileSprite != null -> dungeonRenderer.render(entity, deltaTime)
-            placeholder != null -> placeholderRenderer.render(transform!!)
-            else -> error("Can't render entity $entity")
-        }
+        val renderer = entity[Renderable.mapper]!!
+        renderer.renderer.render(renderEngine, entity)
     }
 
     private fun TransformComponent.isVisible(): Boolean {

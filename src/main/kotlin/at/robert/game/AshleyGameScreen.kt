@@ -5,7 +5,6 @@ import at.robert.game.entity.FloorTile
 import at.robert.game.entity.PlayerEntity
 import at.robert.game.entity.addEntity
 import at.robert.game.system.*
-import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
@@ -41,12 +40,12 @@ class AshleyGameScreen : KtxScreen {
     private val batch = PolygonSpriteBatch()
     private val shapeRenderer = ShapeRenderer()
     private val debugFont = BitmapFont()
-    private val assetManager = AssetManager()
+    private val resourceManager = ResourceManager()
 
     init {
         engine.addSystem(PhysicsSystem())
         engine.addSystem(PlayerControlSystem())
-        engine.addSystem(RenderSystem(batch, shapeRenderer, camera, assetManager))
+        engine.addSystem(RenderSystem(batch, shapeRenderer, camera, resourceManager))
         engine.addSystem(DespawnSystem(30f))
         engine.addSystem(DebugRenderSystem(batch, debugFont))
 //        engine.addSystem(JBumpDebugRenderSystem(camera, shapeRenderer))
@@ -83,7 +82,7 @@ class AshleyGameScreen : KtxScreen {
         batch.dispose()
         shapeRenderer.dispose()
         debugFont.dispose()
-        assetManager.dispose()
+        resourceManager.dispose()
         engine.removeAllSystems()
         engine.removeAllEntities()
     }

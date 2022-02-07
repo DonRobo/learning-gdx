@@ -1,6 +1,8 @@
 package at.robert.game.entity
 
 import at.robert.game.component.*
+import at.robert.game.render.sprite.DungeonSpriteProvider
+import at.robert.game.render.sprite.SimpleSpriteRenderer
 
 fun PlayerEntity(
     x: Float = 0f,
@@ -19,11 +21,6 @@ fun PlayerEntity(
         -1f,
         -.4f
     )
-    withDungeonTileSprite(
-        "wizard_m_run_anim",
-        animationFrames = 4,
-        animationSpeed = 2f,
-    )
     withDontDespawn()
-    withRenderable()
+    withRenderable(SimpleSpriteRenderer(DungeonSpriteProvider("wizard_m_run_anim")))
 }
