@@ -22,5 +22,5 @@ fun PlayerEntity(
         -.4f
     )
     withDontDespawn()
-    withRenderable(SimpleSpriteRenderer(DungeonSpriteProvider("wizard_m_run_anim")))
+    withRenderable(SimpleSpriteRenderer(DungeonSpriteProvider("wizard_m_run_anim", 2f)))
 }

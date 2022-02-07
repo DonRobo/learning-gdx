@@ -8,7 +8,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 
 class DungeonSpriteProvider(
     val spriteName: String,
-) : TextureProvider {
+    val animationSpeed: Float? = null,
+) : SpriteProvider {
 
     private class DungeonSprite(
         val name: String,
@@ -19,6 +20,7 @@ class DungeonSpriteProvider(
     )
 
     private lateinit var dungeonSprite: DungeonSprite
+    private var animationProgress: Float = 0f
 
     private fun init(resourceManager: ResourceManager) {
         val dungeonSpriteMap = resourceManager.load("dungeontileset") { spritesheetName ->
@@ -49,11 +51,18 @@ class DungeonSpriteProvider(
             ?: throw IllegalStateException("DungeonSpriteProvider: Sprite $spriteName not found")
     }
 
-    override fun getTextureRegion(renderEngine: RenderEngine): TextureRegion {
+    override fun getSprite(renderEngine: RenderEngine): TextureRegion {
         if (!::dungeonSprite.isInitialized) {
             init(renderEngine.resourceManager)
         }
-        return dungeonSprite.data[0]
+        if (animationSpeed != null) {
+            val dt = Gdx.graphics.deltaTime
+            animationProgress += dt * animationSpeed
+            while (animationProgress >= 1f) {
+                animationProgress -= 1f
+            }
+        }
+        return dungeonSprite.data[(animationProgress * dungeonSprite.frames).toInt()]
     }
 
     //

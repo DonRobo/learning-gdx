@@ -8,10 +8,10 @@ import com.badlogic.ashley.core.Entity
 import ktx.ashley.get
 
 class SimpleSpriteRenderer(
-    val textureProvider: TextureProvider,
+    val spriteProvider: SpriteProvider,
 ) : Renderer {
     override fun render(renderEngine: RenderEngine, entity: Entity) {
-        val tr = textureProvider.getTextureRegion(renderEngine) ?: return
+        val tr = spriteProvider.getSprite(renderEngine) ?: return
 
         val transform = entity[TransformComponent.mapper]!!
         renderEngine.setState(RenderState.SPRITE)
