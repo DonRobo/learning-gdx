@@ -3,12 +3,23 @@ package at.robert.game.entity
 import at.robert.game.component.withColliding
 import at.robert.game.component.withRenderable
 import at.robert.game.component.withTransformComponent
+import at.robert.game.render.sprite.AdvancedSpriteRenderer
 import at.robert.game.render.sprite.DungeonSpriteProvider
+import at.robert.game.render.sprite.SimpleSpriteModifier
 import at.robert.game.render.sprite.SimpleSpriteRenderer
 
 fun FloorTile(x: Int = 0, y: Int = 0) = EntityPrefab {
     withTransformComponent(x.toFloat(), y.toFloat(), 1f, 1f)
-    withRenderable(SimpleSpriteRenderer(DungeonSpriteProvider("floor_1")), -2)
+    withRenderable(
+        AdvancedSpriteRenderer(
+            DungeonSpriteProvider("floor_1"),
+            SimpleSpriteModifier(
+//                flipX = MathUtils.randomBoolean(),
+//                flipY = MathUtils.randomBoolean(),
+//                rotatedBy90 = MathUtils.random(0, 3)
+            )
+        ), -2
+    )
 }
 
 fun ColumnTile(x: Int = 0, y: Int = 0) = EntityPrefab {

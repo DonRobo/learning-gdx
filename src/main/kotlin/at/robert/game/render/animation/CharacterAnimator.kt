@@ -16,6 +16,7 @@ class CharacterAnimator(
     private var lookLeft = false
     override val flipX: Boolean get() = lookLeft
     override val flipY: Boolean get() = false
+    override val rotatedBy90: Int get() = 0
 
     private var currentAnimation: SpriteProvider = idle
 
