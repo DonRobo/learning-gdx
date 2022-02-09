@@ -1,13 +1,23 @@
 package at.robert.game.entity
 
 import at.robert.game.component.*
+import at.robert.game.render.animation.CharacterAnimator
+import at.robert.game.render.sprite.AdvancedSpriteRenderer
 import at.robert.game.render.sprite.DungeonSpriteProvider
-import at.robert.game.render.sprite.SimpleSpriteRenderer
 
 fun PlayerEntity(
     x: Float = 0f,
     y: Float = 0f,
 ) = EntityPrefab {
+    val walkAnimation = DungeonSpriteProvider("wizard_m_run_anim", 2f)
+    val animator = CharacterAnimator(
+        walkNorth = walkAnimation,
+        walkSouth = walkAnimation,
+        walkEast = walkAnimation,
+        walkWest = walkAnimation,
+        idle = DungeonSpriteProvider("wizard_m_idle_anim", .8f),
+    )
+    withAnimated(animator)
     withTransformComponent(
         x = x,
         y = y,
@@ -22,5 +32,5 @@ fun PlayerEntity(
         -.4f
     )
     withDontDespawn()
-    withRenderable(SimpleSpriteRenderer(DungeonSpriteProvider("wizard_m_run_anim", 2f)))
+    withRenderable(AdvancedSpriteRenderer(animator, animator))
 }

@@ -1,4 +1,4 @@
-package at.robert.game
+package at.robert.game.util
 
 import com.badlogic.gdx.utils.Disposable
 

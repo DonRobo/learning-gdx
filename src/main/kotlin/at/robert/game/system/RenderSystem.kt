@@ -1,11 +1,11 @@
 package at.robert.game.system
 
-import at.robert.game.ResourceManager
 import at.robert.game.component.CollidingComponent
 import at.robert.game.component.Renderable
 import at.robert.game.component.TransformComponent
 import at.robert.game.render.RenderEngine
 import at.robert.game.render.RenderState
+import at.robert.game.util.ResourceManager
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.SortedIteratingSystem
 import com.badlogic.gdx.graphics.OrthographicCamera

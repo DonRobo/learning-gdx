@@ -1,5 +1,6 @@
 package at.robert.game.system
 
+import at.robert.game.component.Animated
 import at.robert.game.component.CollidingComponent
 import at.robert.game.component.Player
 import at.robert.game.component.TransformComponent
@@ -44,11 +45,27 @@ class PlayerControlSystem : IteratingSystem(
         }
 
         pc.currentDirection = chosenDirection
+        val animator = entity[Animated.mapper]?.animator
         when (chosenDirection) {
-            0 -> transformComponent.y += speed * deltaTime
-            1 -> transformComponent.x += speed * deltaTime
-            2 -> transformComponent.y -= speed * deltaTime
-            3 -> transformComponent.x -= speed * deltaTime
+            0 -> {
+                transformComponent.y += speed * deltaTime
+                animator?.walkNorth()
+            }
+            1 -> {
+                transformComponent.x += speed * deltaTime
+                animator?.walkEast()
+            }
+            2 -> {
+                transformComponent.y -= speed * deltaTime
+                animator?.walkSouth()
+            }
+            3 -> {
+                transformComponent.x -= speed * deltaTime
+                animator?.walkWest()
+            }
+            else -> {
+                animator?.idle()
+            }
         }
         val colliding = entity[CollidingComponent.mapper]
         if (colliding != null && chosenDirection >= 0) {

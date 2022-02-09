@@ -1,6 +1,6 @@
 package at.robert.game.render
 
-import at.robert.game.ResourceManager
+import at.robert.game.util.ResourceManager
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer

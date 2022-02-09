@@ -5,6 +5,7 @@ import at.robert.game.entity.FloorTile
 import at.robert.game.entity.PlayerEntity
 import at.robert.game.entity.addEntity
 import at.robert.game.system.*
+import at.robert.game.util.ResourceManager
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
