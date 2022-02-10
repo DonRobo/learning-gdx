@@ -24,5 +24,5 @@ fun Crate(
         positiveYOffset = 0.3f,
     )
     withRenderable(SimpleSpriteRenderer(DungeonSpriteProvider("crate")))
-    withPushable()
+    withPushable(5f)
 }

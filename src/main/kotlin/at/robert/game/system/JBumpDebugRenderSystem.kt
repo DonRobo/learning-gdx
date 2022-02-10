@@ -6,7 +6,6 @@ import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.dongbat.jbump.Point
-import ktx.ashley.getSystem
 
 class JBumpDebugRenderSystem(
     private val camera: OrthographicCamera,
@@ -21,7 +20,7 @@ class JBumpDebugRenderSystem(
         }
         if (!active) return
 
-        val physicsSystem = engine.getSystem<PhysicsSystem>()
+        val physicsSystem = engine.getSystem(JBumpPhysicsSystem::class.java) ?: return
         val jbumpWorld = physicsSystem.jbumpWorld
         shapeRenderer.projectionMatrix = camera.combined
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled)

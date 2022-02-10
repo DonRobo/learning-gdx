@@ -17,7 +17,10 @@ import kotlin.time.measureTime
 @OptIn(ExperimentalTime::class)
 class DespawnSystem(
     var maxDistance: Float = 100f
-) : IteratingSystem(allOf(TransformComponent::class, Despawnable::class).exclude(Player::class).get()) {
+) : IteratingSystem(
+    allOf(TransformComponent::class, Despawnable::class).exclude(Player::class).get(),
+    7
+) {
 
     private lateinit var players: ImmutableArray<Entity>
 

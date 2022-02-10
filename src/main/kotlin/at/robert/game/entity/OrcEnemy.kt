@@ -32,5 +32,5 @@ fun OrcEnemy(
     )
     withRenderable(AdvancedSpriteRenderer(animator, animator))
     withEnemyComponent(3f)
-    withPushable()
+    withPushable(10f)
 }

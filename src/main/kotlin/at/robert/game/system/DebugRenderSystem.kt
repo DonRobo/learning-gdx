@@ -49,9 +49,9 @@ class DebugRenderSystem(
         print("Render mode switches: ${PerformanceMetrics.renderModeSwitches}")
         print("DespawnSystem: ${PerformanceMetrics.despawnSystem}")
         print("Physics: ${PerformanceMetrics.physics}")
-        print("Push calculations: ${PerformanceMetrics.pushes}")
-        print("JBump cells: ${PerformanceMetrics.jbumpCells}")
-        print("JBump moves: ${PerformanceMetrics.jbumpMoves}")
+//        print("Push calculations: ${PerformanceMetrics.pushes}")
+//        print("JBump cells: ${PerformanceMetrics.jbumpCells}")
+//        print("JBump moves: ${PerformanceMetrics.jbumpMoves}")
         print("Overall time: ${PerformanceMetrics.overallTime}")
         val theoreticalFps =
             (1000000f / (PerformanceMetrics.overallTime?.inWholeMicroseconds?.toFloat() ?: 100f)).roundToInt()

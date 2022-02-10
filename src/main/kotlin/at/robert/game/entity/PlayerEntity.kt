@@ -32,5 +32,5 @@ fun PlayerEntity(
         -.4f
     )
     withRenderable(AdvancedSpriteRenderer(animator, animator))
-    withPushable()
+    withPushable(100f)
 }

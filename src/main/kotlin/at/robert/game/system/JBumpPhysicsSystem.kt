@@ -20,7 +20,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
 
 @OptIn(ExperimentalTime::class)
-class PhysicsSystem : EntitySystem(6) {
+class JBumpPhysicsSystem : EntitySystem(6) {
 
     val jbumpWorld = World<Entity>(6f).apply {
         this.isTileMode = false
@@ -33,7 +33,7 @@ class PhysicsSystem : EntitySystem(6) {
         override fun entityAdded(entity: Entity) {
             val transform = entity[TransformComponent.mapper]!!
             val colliding = entity[CollidingComponent.mapper]!!
-            val r = colliding.rect!!
+            val r = colliding.rect
 
             val item = Item(entity)
             jbumpWorld.add(

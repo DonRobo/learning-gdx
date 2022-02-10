@@ -41,14 +41,19 @@ class AshleyGameScreen : KtxScreen {
     private val resourceManager = ResourceManager()
 
     init {
-        engine.addSystem(PhysicsSystem())
+        engine.addSystem(Box2DPhysicsSystem())
         engine.addSystem(PlayerControlSystem())
         engine.addSystem(RenderSystem(batch, shapeRenderer, camera, resourceManager))
         engine.addSystem(DespawnSystem(30f))
         engine.addSystem(DebugRenderSystem(batch, debugFont))
         engine.addSystem(EnemySystem())
-        engine.addSystem(JBumpDebugRenderSystem(camera, shapeRenderer))
+//        engine.addSystem(JBumpDebugRenderSystem(camera, shapeRenderer))
+        engine.addSystem(Box2DDebugRenderSystem(camera))
         engine.addSystem(TransformDebugRenderSystem(camera, shapeRenderer))
+
+        engine.systems.sortedBy { it.priority }.forEachIndexed { index, entitySystem ->
+            println("${index + 1}. ${entitySystem.javaClass.simpleName} (${entitySystem.priority})")
+        }
 
         engine.addEntity(PlayerEntity())
 
@@ -60,7 +65,7 @@ class AshleyGameScreen : KtxScreen {
 
         engine.addEntity(ColumnTile(3, 3))
 
-        for (i in 0 until 10) {
+        for (i in 0 until 100) {
             engine.addEntity(OrcEnemy(-3f, 3f))
         }
         for (y in -5..5) {
