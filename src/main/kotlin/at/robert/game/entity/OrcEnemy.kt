@@ -30,7 +30,6 @@ fun OrcEnemy(
         -.7f,
         0f
     )
-    withDontDespawn()
     withRenderable(AdvancedSpriteRenderer(animator, animator))
     withEnemyComponent(3f)
     withPushable()

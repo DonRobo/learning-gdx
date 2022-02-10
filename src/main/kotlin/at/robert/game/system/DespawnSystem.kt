@@ -1,6 +1,6 @@
 package at.robert.game.system
 
-import at.robert.game.component.DontDespawn
+import at.robert.game.component.Despawnable
 import at.robert.game.component.Player
 import at.robert.game.component.TransformComponent
 import at.robert.game.component.squaredDistanceTo
@@ -17,7 +17,7 @@ import kotlin.time.measureTime
 @OptIn(ExperimentalTime::class)
 class DespawnSystem(
     var maxDistance: Float = 100f
-) : IteratingSystem(allOf(TransformComponent::class).exclude(DontDespawn::class, Player::class).get()) {
+) : IteratingSystem(allOf(TransformComponent::class, Despawnable::class).exclude(Player::class).get()) {
 
     private lateinit var players: ImmutableArray<Entity>
 

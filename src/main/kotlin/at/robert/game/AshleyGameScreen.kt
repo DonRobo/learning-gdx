@@ -60,10 +60,14 @@ class AshleyGameScreen : KtxScreen {
 
         engine.addEntity(ColumnTile(3, 3))
 
-//        for (i in 0 until 10) {
-//            engine.addEntity(OrcEnemy(-3f, 3f))
-//        }
-        engine.addEntity(Crate(-3f, 3f))
+        for (i in 0 until 10) {
+            engine.addEntity(OrcEnemy(-3f, 3f))
+        }
+        for (y in -5..5) {
+            for (x in -5..+5) {
+                engine.addEntity(Crate(x * 1.5f, y * 1.5f))
+            }
+        }
     }
 
 

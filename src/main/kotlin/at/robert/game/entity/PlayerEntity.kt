@@ -31,7 +31,6 @@ fun PlayerEntity(
         -.9f,
         -.4f
     )
-    withDontDespawn()
     withRenderable(AdvancedSpriteRenderer(animator, animator))
     withPushable()
 }

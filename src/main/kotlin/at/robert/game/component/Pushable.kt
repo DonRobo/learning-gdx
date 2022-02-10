@@ -6,6 +6,7 @@ import ktx.ashley.Mapper
 import ktx.ashley.with
 
 class Pushable : Component {
+    var awake = false
     companion object : Mapper<Pushable>()
 }
 

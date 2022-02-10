@@ -5,10 +5,10 @@ import ktx.ashley.EngineEntity
 import ktx.ashley.Mapper
 import ktx.ashley.with
 
-class DontDespawn : Component {
-    companion object : Mapper<DontDespawn>()
+class Despawnable : Component {
+    companion object : Mapper<Despawnable>()
 }
 
-fun EngineEntity.withDontDespawn() {
-    with<DontDespawn>()
+fun EngineEntity.withDespawnable() {
+    with<Despawnable>()
 }

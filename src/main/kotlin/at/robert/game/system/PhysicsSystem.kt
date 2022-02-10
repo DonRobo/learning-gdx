@@ -13,6 +13,7 @@ import com.dongbat.jbump.Response
 import com.dongbat.jbump.World
 import ktx.ashley.allOf
 import ktx.ashley.get
+import kotlin.math.absoluteValue
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.time.ExperimentalTime
@@ -73,6 +74,7 @@ class PhysicsSystem : EntitySystem(6) {
         collisionRect: Rect,
         collidingComponent: CollidingComponent
     ) {
+        PerformanceMetrics.jbumpMoves++
         val moved = jbumpWorld.move(
             item,
             alreadyMovedTransform.x + collisionRect.x,
@@ -83,10 +85,9 @@ class PhysicsSystem : EntitySystem(6) {
             @Suppress("UNCHECKED_CAST")
             other as Item<Entity>
 
-            val itemPushable = collidingItem[Pushable.mapper]
             val otherPushable = other[Pushable.mapper]
 
-            if (itemPushable != null && otherPushable != null) {
+            if (otherPushable != null) {
                 null
             } else {
                 Response.slide
@@ -101,12 +102,16 @@ class PhysicsSystem : EntitySystem(6) {
 
     override fun update(deltaTime: Float) {
         measureTime {
+            PerformanceMetrics.pushes = 0
+            PerformanceMetrics.jbumpMoves = 0
             jbumpEntities.forEach {
                 val collidingComponent = it[CollidingComponent.mapper]!!
                 val transform = it[TransformComponent.mapper]!!
                 if (transform.x == collidingComponent.lastPositionX && transform.y == collidingComponent.lastPositionY) {
+                    it[Pushable.mapper]?.awake = false
                     return@forEach
                 }
+                it[Pushable.mapper]?.awake = true
                 val item = collidingComponent.item ?: return@forEach
                 val r = collidingComponent.rect
 
@@ -115,12 +120,13 @@ class PhysicsSystem : EntitySystem(6) {
             pushableEntities.forEach {
                 val transform = it[TransformComponent.mapper]!!
                 val pushable = it[Pushable.mapper]!!
+                if (!pushable.awake) return@forEach
                 val collidingComponent = it[CollidingComponent.mapper]!!
-
+                PerformanceMetrics.jbumpMoves++
                 val response = jbumpWorld.check(
                     collidingComponent.item,
-                    transform.x,
-                    collidingComponent.rect.x
+                    transform.x + collidingComponent.rect.x,
+                    transform.y + collidingComponent.rect.y,
                 ) { collidingItem, other ->
                     @Suppress("UNCHECKED_CAST")
                     collidingItem as Item<Entity>
@@ -130,7 +136,7 @@ class PhysicsSystem : EntitySystem(6) {
                     return@check if (collidingItem != collidingComponent.item || other == collidingComponent.item) {
                         null
                     } else if (collidingItem[Pushable.mapper] != null && other[Pushable.mapper] != null)
-                        Response.touch
+                        Response.cross
                     else
                         null
                 }
@@ -138,9 +144,16 @@ class PhysicsSystem : EntitySystem(6) {
                 var pushedY = 0f
 
                 val itemArea = collidingComponent.rect.w * collidingComponent.rect.h
+                val minX = collidingComponent.rect.w / -2f
+                val maxX = collidingComponent.rect.w / 2f
+                val minY = collidingComponent.rect.h / -2f
+                val maxY = collidingComponent.rect.h / 2f
                 response.projectedCollisions.iterator().forEach { c ->
                     val itemRect = c.itemRect!!
                     val otherRect = c.otherRect!!
+
+                    @Suppress("UNCHECKED_CAST")
+                    (c.other as Item<Entity>)[Pushable.mapper]!!.awake = true
 
                     val intersectionFromX = max(itemRect.x, otherRect.x)
                     val intersectionToX = min(itemRect.x + itemRect.w, otherRect.x + otherRect.w)
@@ -150,24 +163,38 @@ class PhysicsSystem : EntitySystem(6) {
                     val intersectionToY = min(itemRect.y + itemRect.h, otherRect.y + otherRect.h)
                     val intersectionHeight = intersectionToY - intersectionFromY
 
+                    PerformanceMetrics.pushes = PerformanceMetrics.pushes!! + 1
+
                     if (intersectionWidth > 0f && intersectionHeight > 0f) {
                         val intersectionArea = intersectionWidth * intersectionHeight
-                        val power = (itemArea / intersectionArea) * 0.1f
+                        val power = max(1f, (intersectionArea / itemArea) * 10f)
                         val intersectionCenterX = intersectionFromX + intersectionWidth / 2f
                         val intersectionCenterY = intersectionFromY + intersectionHeight / 2f
                         val otherCenterX = otherRect.x + otherRect.w / 2f
                         val otherCenterY = otherRect.y + otherRect.h / 2f
                         val pushAngle =
-                            MathUtils.atan2(intersectionCenterY - otherCenterY, intersectionCenterX - otherCenterX)
-                        pushedX += power * MathUtils.cos(pushAngle)
-                        pushedY += power * MathUtils.sin(pushAngle)
+                            if (
+                                (intersectionCenterY - otherCenterY).absoluteValue <= 0.0001f &&
+                                (intersectionCenterX - otherCenterX).absoluteValue <= 0.0001f
+                            ) {
+                                MathUtils.random(0f, 2 * MathUtils.PI)
+                            } else {
+                                MathUtils.atan2(intersectionCenterY - otherCenterY, intersectionCenterX - otherCenterX)
+                            }
+
+                        val xPush = MathUtils.cos(pushAngle)
+                        val yPush = MathUtils.sin(pushAngle)
+
+                        pushedX += power * xPush
+                        pushedY += power * yPush
                     }
                 }
 
-                transform.x += pushedX * deltaTime
-                transform.y += pushedY * deltaTime
+                pushedX = MathUtils.clamp(pushedX * deltaTime, minX, maxX)
+                pushedY = MathUtils.clamp(pushedY * deltaTime, minY, maxY)
 
-                moveObject(collidingComponent.item!!, transform, collidingComponent.rect, collidingComponent)
+                transform.x += pushedX
+                transform.y += pushedY
             }
         }.let {
             PerformanceMetrics.physics = it

@@ -13,7 +13,9 @@ object PerformanceMetrics {
     var despawnSystem: Duration? = null
     var renderTime: Duration? = null
     var physics: Duration? = null
+    var pushes: Int? = null
     var jbumpCells: Int? = null
+    var jbumpMoves: Int = 0
     var overallTime: Duration? = null
 }
 
@@ -36,38 +38,24 @@ class DebugRenderSystem(
         spriteBatch.begin()
         var currentPos = 10f
         val lineDistance = 20f
-        font.draw(spriteBatch, "FPS: ${Gdx.graphics.framesPerSecond}", 10f, Gdx.graphics.height - currentPos)
-            .also { currentPos += lineDistance }
-        font.draw(spriteBatch, "Entities: ${engine.entities.size()}", 10f, Gdx.graphics.height - currentPos)
-            .also { currentPos += lineDistance }
-        font.draw(
-            spriteBatch,
-            "Render time: ${PerformanceMetrics.renderTime}",
-            10f,
-            Gdx.graphics.height - currentPos
-        ).also { currentPos += lineDistance }
-        font.draw(
-            spriteBatch,
-            "Render mode switches: ${PerformanceMetrics.renderModeSwitches}",
-            10f,
-            Gdx.graphics.height - currentPos
-        ).also { currentPos += lineDistance }
-        font.draw(
-            spriteBatch,
-            "DespawnSystem: ${PerformanceMetrics.despawnSystem}",
-            10f,
-            Gdx.graphics.height - currentPos
-        ).also { currentPos += lineDistance }
-        font.draw(spriteBatch, "Physics: ${PerformanceMetrics.physics}", 10f, Gdx.graphics.height - currentPos)
-            .also { currentPos += lineDistance }
-        font.draw(spriteBatch, "JBump cells: ${PerformanceMetrics.jbumpCells}", 10f, Gdx.graphics.height - currentPos)
-            .also { currentPos += lineDistance }
-        font.draw(spriteBatch, "Overall time: ${PerformanceMetrics.overallTime}", 10f, Gdx.graphics.height - currentPos)
-            .also { currentPos += lineDistance }
+        fun print(text: String) {
+            font.draw(spriteBatch, text, 10f, Gdx.graphics.height - currentPos)
+                .also { currentPos += lineDistance }
+        }
+
+        print("FPS: ${Gdx.graphics.framesPerSecond}")
+        print("Entities: ${engine.entities.size()}")
+        print("Render time: ${PerformanceMetrics.renderTime}")
+        print("Render mode switches: ${PerformanceMetrics.renderModeSwitches}")
+        print("DespawnSystem: ${PerformanceMetrics.despawnSystem}")
+        print("Physics: ${PerformanceMetrics.physics}")
+        print("Push calculations: ${PerformanceMetrics.pushes}")
+        print("JBump cells: ${PerformanceMetrics.jbumpCells}")
+        print("JBump moves: ${PerformanceMetrics.jbumpMoves}")
+        print("Overall time: ${PerformanceMetrics.overallTime}")
         val theoreticalFps =
             (1000000f / (PerformanceMetrics.overallTime?.inWholeMicroseconds?.toFloat() ?: 100f)).roundToInt()
-        font.draw(spriteBatch, "Theoretical FPS: $theoreticalFps", 10f, Gdx.graphics.height - currentPos)
-            .also { currentPos += lineDistance }
+        print("Theoretical FPS: $theoreticalFps")
         spriteBatch.end()
 
         spriteBatch.projectionMatrix = oldProjectionMatrix
