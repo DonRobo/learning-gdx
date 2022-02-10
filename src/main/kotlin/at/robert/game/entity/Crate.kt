@@ -1,9 +1,6 @@
 package at.robert.game.entity
 
-import at.robert.game.component.withColliding
-import at.robert.game.component.withPushable
-import at.robert.game.component.withRenderable
-import at.robert.game.component.withTransformComponent
+import at.robert.game.component.*
 import at.robert.game.render.sprite.DungeonSpriteProvider
 import at.robert.game.render.sprite.SimpleSpriteRenderer
 
@@ -25,4 +22,5 @@ fun Crate(
     )
     withRenderable(SimpleSpriteRenderer(DungeonSpriteProvider("crate")))
     withPushable(5f)
+    withDestroyable(100)
 }

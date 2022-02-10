@@ -1,13 +1,15 @@
 package at.robert.game.system
 
 import at.robert.game.component.Animated
-import at.robert.game.component.CollidingComponent
 import at.robert.game.component.Player
 import at.robert.game.component.TransformComponent
+import at.robert.game.entity.Bullet
+import at.robert.game.entity.addEntity
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.systems.IteratingSystem
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
+import com.badlogic.gdx.math.MathUtils
 import ktx.ashley.allOf
 import ktx.ashley.get
 
@@ -67,6 +69,9 @@ class PlayerControlSystem : IteratingSystem(
                 animator?.idle()
             }
         }
-        entity[CollidingComponent.mapper]
+
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            engine.addEntity(Bullet(transformComponent.x, transformComponent.y, MathUtils.random(0f, 360f)))
+        }
     }
 }

@@ -5,8 +5,6 @@ import com.badlogic.gdx.assets.AssetLoaderParameters
 import com.badlogic.gdx.assets.AssetManager
 import com.badlogic.gdx.assets.loaders.AssetLoader
 import com.badlogic.gdx.math.MathUtils
-import com.dongbat.jbump.Collision
-import com.dongbat.jbump.Collisions
 
 fun secondsFromNanos(nanos: Long): Float {
     return nanos / 1000000000.0f
@@ -35,17 +33,4 @@ inline fun <reified T> AssetManager.getOrLoadAsset(filename: String): T? {
 
 inline fun <reified T, P : AssetLoaderParameters<T>> AssetManager.setLoader(loader: AssetLoader<T, P>) {
     setLoader(T::class.java, loader)
-}
-
-fun Collisions.iterator(): Iterator<Collision> {
-    return object : Iterator<Collision> {
-        var index = 0
-        override fun hasNext(): Boolean {
-            return index < size()
-        }
-
-        override fun next(): Collision {
-            return get(index++)
-        }
-    }
 }

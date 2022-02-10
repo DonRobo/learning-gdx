@@ -1,8 +1,6 @@
 package at.robert.game.system
 
-import at.robert.game.component.CollidingComponent
-import at.robert.game.component.Pushable
-import at.robert.game.component.TransformComponent
+import at.robert.game.component.*
 import com.badlogic.ashley.core.Engine
 import com.badlogic.ashley.core.Entity
 import com.badlogic.ashley.core.EntityListener
@@ -12,10 +10,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType
 import com.badlogic.gdx.physics.box2d.World
 import ktx.ashley.allOf
 import ktx.ashley.get
-import ktx.box2d.body
-import ktx.box2d.box
-import ktx.box2d.createWorld
-import ktx.box2d.polygon
+import ktx.box2d.*
 import ktx.math.vec2
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
@@ -28,53 +23,66 @@ class Box2DPhysicsSystem : EntitySystem(6) {
     private val entityListener = object : EntityListener {
         override fun entityAdded(entity: Entity) {
             val transform = entity[TransformComponent.mapper]!!
-            val colliding = entity[CollidingComponent.mapper]!!
             val pushable = entity[Pushable.mapper]
+            val colliding = entity[CollidingComponent.mapper]!!
+            val moving = entity[MovingComponent.mapper]
+            val hitDetector = entity[HitDetector.mapper]
+            val collidingRect = colliding.rect
+            val collidingCircle = colliding.circleRadius
 
             colliding.body = world.body {
                 type = when {
                     pushable != null -> BodyType.DynamicBody
+                    moving != null -> BodyType.KinematicBody
                     else -> BodyType.StaticBody //TODO kinetic body?
                 }
                 linearDamping = 1f
                 fixedRotation = true
-                if (pushable == null) {
-                    box(
-                        position = vec2(
-                            colliding.rect.x + colliding.rect.w / 2f,
-                            colliding.rect.y + colliding.rect.h / 2f
-                        ),
-                        width = colliding.rect.w,
-                        height = colliding.rect.h,
-                    ) {
-                        userData = entity
-                        density = 40f
-                        restitution = 0f //TODO configure?
-                        friction = 0f //TODO configure?
+                fun FixtureDefinition.defineFixture() {
+                    userData = entity
+                    density = pushable?.density ?: 40f
+                    restitution = 0f
+                    friction = 0f
+                    isSensor = hitDetector != null
+                }
+                when {
+                    collidingRect != null && pushable == null -> {
+                        box(
+                            position = vec2(
+                                collidingRect.x + collidingRect.width / 2f,
+                                collidingRect.y + collidingRect.height / 2f
+                            ),
+                            width = collidingRect.width,
+                            height = collidingRect.height,
+                        ) {
+                            defineFixture()
+                        }
                     }
-                } else {
-                    val vertices = FloatArray(8)
+                    collidingRect != null && pushable != null -> {
+                        val vertices = FloatArray(8)
 
-                    vertices[0] = colliding.rect.x + colliding.rect.w
-                    vertices[1] = colliding.rect.y + colliding.rect.h / 2f
+                        vertices[0] = collidingRect.x + collidingRect.width
+                        vertices[1] = collidingRect.y + collidingRect.height / 2f
 
-                    vertices[2] = colliding.rect.x + colliding.rect.w / 2f
-                    vertices[3] = colliding.rect.y + colliding.rect.h
+                        vertices[2] = collidingRect.x + collidingRect.width / 2f
+                        vertices[3] = collidingRect.y + collidingRect.height
 
-                    vertices[4] = colliding.rect.x
-                    vertices[5] = colliding.rect.y + colliding.rect.h / 2f
+                        vertices[4] = collidingRect.x
+                        vertices[5] = collidingRect.y + collidingRect.height / 2f
 
-                    vertices[6] = colliding.rect.x + colliding.rect.w / 2f
-                    vertices[7] = colliding.rect.y
+                        vertices[6] = collidingRect.x + collidingRect.width / 2f
+                        vertices[7] = collidingRect.y
 
-                    polygon(
-                        vertices = vertices
-                    ) {
-                        userData = entity
-                        density = pushable.density
-                        restitution = 0f //TODO configure?
-                        friction = 0f //TODO configure?
+                        polygon(
+                            vertices = vertices,
+                        ) {
+                            defineFixture()
+                        }
                     }
+                    collidingCircle != null -> {
+                        circle(radius = collidingCircle) { defineFixture() }
+                    }
+                    else -> throw IllegalStateException("CollidingComponent is not configured correctly")
                 }
             }
             colliding.body!!.setTransform(
@@ -108,34 +116,21 @@ class Box2DPhysicsSystem : EntitySystem(6) {
             physicsEntities.forEach {
                 val transform = it[TransformComponent.mapper]!!
                 val body = it[CollidingComponent.mapper]!!.body!!
+                val moving = it[MovingComponent.mapper]
 
                 val multiplier = 1f / deltaTime
                 body.setLinearVelocity(
-                    (transform.x - body.position.x) * multiplier,
-                    (transform.y - body.position.y) * multiplier,
+                    (transform.x - body.position.x) * multiplier + (moving?.vX ?: 0f),
+                    (transform.y - body.position.y) * multiplier + (moving?.vY ?: 0f)
                 )
-//                body.setTransform(
-//                    transform.x,
-//                    transform.y,
-//                    0f
-//                )
             }
             world.step(deltaTime, 6, 2)
             physicsEntities.forEach {
                 val transform = it[TransformComponent.mapper]!!
                 val body = it[CollidingComponent.mapper]!!.body!!
 
-//                val oldX = transform.x
-//                val oldY = transform.y
-
                 transform.x = body.position.x
                 transform.y = body.position.y
-
-//                val movedTooMuchX = transform.x - oldX
-//                val movedTooMuchY = transform.y - oldY
-//                if (movedTooMuchX.absoluteValue > 0.01f || movedTooMuchY.absoluteValue > 0.01f) {
-//                    println("$movedTooMuchX $movedTooMuchY")
-//                }
             }
         }.let {
             PerformanceMetrics.physics = it

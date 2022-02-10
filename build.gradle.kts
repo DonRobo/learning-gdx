@@ -32,8 +32,6 @@ dependencies {
     implementation("com.badlogicgames.gdx:gdx-box2d:$gdxVersion")
     implementation("com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop")
 
-    implementation("com.github.implicit-invocation:jbump:v1.0.2")
-
     implementation("io.github.libktx:ktx-ashley:$ktxVersion")
     implementation("io.github.libktx:ktx-app:$ktxVersion")
     implementation("io.github.libktx:ktx-math:$ktxVersion")

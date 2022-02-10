@@ -48,7 +48,6 @@ class AshleyGameScreen : KtxScreen {
         engine.addSystem(DespawnSystem(30f))
         engine.addSystem(DebugRenderSystem(batch, debugFont))
         engine.addSystem(EnemySystem())
-//        engine.addSystem(JBumpDebugRenderSystem(camera, shapeRenderer))
         engine.addSystem(Box2DDebugRenderSystem(camera))
         engine.addSystem(TransformDebugRenderSystem(camera, shapeRenderer))
 
@@ -56,6 +55,7 @@ class AshleyGameScreen : KtxScreen {
             println("${index + 1}. ${entitySystem.javaClass.simpleName} (${entitySystem.priority})")
         }
 
+//        engine.loadLevel("test.lvl")
         engine.addEntity(PlayerEntity())
 
         for (y in -10 until 10) {
@@ -64,7 +64,7 @@ class AshleyGameScreen : KtxScreen {
             }
         }
 
-        engine.addEntity(ColumnTile(3, 3))
+        engine.addEntity(ColumnObstacle(3f, 3f))
 
         val orcCount = 20
         for (i in 0 until orcCount) {
