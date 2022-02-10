@@ -14,6 +14,7 @@ import kotlin.math.absoluteValue
 
 class EnemySystem : IteratingSystem(
     allOf(EnemyComponent::class, TransformComponent::class).get(),
+    5
 ) {
     private lateinit var playerList: ImmutableArray<Entity>
     private lateinit var player: Entity

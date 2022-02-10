@@ -15,6 +15,7 @@ import ktx.ashley.get
 import ktx.box2d.body
 import ktx.box2d.box
 import ktx.box2d.createWorld
+import ktx.box2d.polygon
 import ktx.math.vec2
 import kotlin.time.ExperimentalTime
 import kotlin.time.measureTime
@@ -37,15 +38,43 @@ class Box2DPhysicsSystem : EntitySystem(6) {
                 }
                 linearDamping = 1f
                 fixedRotation = true
-                box(
-                    position = vec2(colliding.rect.x, colliding.rect.y),
-                    width = colliding.rect.w,
-                    height = colliding.rect.h,
-                ) {
-                    userData = entity
-                    density = pushable?.density ?: 40f
-                    restitution = 0f //TODO configure?
-                    friction = 0f //TODO configure?
+                if (pushable == null) {
+                    box(
+                        position = vec2(
+                            colliding.rect.x + colliding.rect.w / 2f,
+                            colliding.rect.y + colliding.rect.h / 2f
+                        ),
+                        width = colliding.rect.w,
+                        height = colliding.rect.h,
+                    ) {
+                        userData = entity
+                        density = 40f
+                        restitution = 0f //TODO configure?
+                        friction = 0f //TODO configure?
+                    }
+                } else {
+                    val vertices = FloatArray(8)
+
+                    vertices[0] = colliding.rect.x + colliding.rect.w
+                    vertices[1] = colliding.rect.y + colliding.rect.h / 2f
+
+                    vertices[2] = colliding.rect.x + colliding.rect.w / 2f
+                    vertices[3] = colliding.rect.y + colliding.rect.h
+
+                    vertices[4] = colliding.rect.x
+                    vertices[5] = colliding.rect.y + colliding.rect.h / 2f
+
+                    vertices[6] = colliding.rect.x + colliding.rect.w / 2f
+                    vertices[7] = colliding.rect.y
+
+                    polygon(
+                        vertices = vertices
+                    ) {
+                        userData = entity
+                        density = pushable.density
+                        restitution = 0f //TODO configure?
+                        friction = 0f //TODO configure?
+                    }
                 }
             }
             colliding.body!!.setTransform(

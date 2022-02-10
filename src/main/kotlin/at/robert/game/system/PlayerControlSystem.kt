@@ -15,7 +15,7 @@ class PlayerControlSystem : IteratingSystem(
     allOf(
         Player::class,
     ).get(),
-    5
+    4
 ) {
     override fun processEntity(entity: Entity, deltaTime: Float) {
         val transformComponent = entity[TransformComponent.mapper]!!

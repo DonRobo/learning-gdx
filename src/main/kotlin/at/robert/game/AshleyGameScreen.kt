@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
+import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.math.Vector3
 import ktx.app.KtxScreen
 import ktx.app.clearScreen
@@ -65,8 +66,10 @@ class AshleyGameScreen : KtxScreen {
 
         engine.addEntity(ColumnTile(3, 3))
 
-        for (i in 0 until 100) {
-            engine.addEntity(OrcEnemy(-3f, 3f))
+        val orcCount = 20
+        for (i in 0 until orcCount) {
+            val angle = (i * 360f / orcCount) * MathUtils.degreesToRadians
+            engine.addEntity(OrcEnemy(MathUtils.cos(angle) * 15f, MathUtils.sin(angle) * 15f))
         }
         for (y in -5..5) {
             for (x in -5..+5) {
