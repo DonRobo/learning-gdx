@@ -2,6 +2,7 @@ package at.robert.game.system
 
 import com.badlogic.ashley.core.EntitySystem
 import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.g2d.BitmapFont
 import com.badlogic.gdx.graphics.g2d.PolygonSpriteBatch
 import kotlin.math.roundToInt
@@ -21,7 +22,14 @@ class DebugRenderSystem(
     private val font: BitmapFont,
 ) : EntitySystem(15) {
 
+    var active = true
+
     override fun update(deltaTime: Float) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F1)) {
+            active = !active
+        }
+        if (!active) return
+
         val oldProjectionMatrix = spriteBatch.projectionMatrix.cpy()
         spriteBatch.projectionMatrix.setToOrtho2D(0f, 0f, Gdx.graphics.width.toFloat(), Gdx.graphics.height.toFloat())
 

@@ -1,6 +1,8 @@
 package at.robert.game.system
 
 import com.badlogic.ashley.core.EntitySystem
+import com.badlogic.gdx.Gdx
+import com.badlogic.gdx.Input
 import com.badlogic.gdx.graphics.OrthographicCamera
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.dongbat.jbump.Point
@@ -11,8 +13,14 @@ class JBumpDebugRenderSystem(
     private val shapeRenderer: ShapeRenderer,
 ) : EntitySystem(11) {
 
+    var active = false
 
     override fun update(deltaTime: Float) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F3)) {
+            active = !active
+        }
+        if (!active) return
+
         val physicsSystem = engine.getSystem<PhysicsSystem>()
         val jbumpWorld = physicsSystem.jbumpWorld
         shapeRenderer.projectionMatrix = camera.combined

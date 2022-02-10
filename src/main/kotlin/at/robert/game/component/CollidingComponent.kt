@@ -10,31 +10,28 @@ import ktx.ashley.with
 
 class CollidingComponent : Component {
     var item: Item<Entity>? = null
-    var moved = false
-    var rect: Rect? = null
+    lateinit var rect: Rect
+    var lastPositionX: Float? = null
+    var lastPositionY: Float? = null
 
     companion object : Mapper<CollidingComponent>()
 }
 
 fun EngineEntity.withColliding(
-    negativeXOffset: Float? = null,
-    positiveXOffset: Float? = null,
-    negativeYOffset: Float? = null,
-    positiveYOffset: Float? = null
+    negativeXOffset: Float,
+    positiveXOffset: Float,
+    negativeYOffset: Float,
+    positiveYOffset: Float,
 ) {
     with<CollidingComponent> {
         item = null
-        moved = false
-        this.rect =
-            if (negativeXOffset != null && positiveXOffset != null && negativeYOffset != null && positiveYOffset != null) {
-                Rect(
-                    negativeXOffset,
-                    negativeYOffset,
-                    positiveXOffset - negativeXOffset,
-                    positiveYOffset - negativeYOffset
-                )
-            } else {
-                null
-            }
+        lastPositionX = null
+        lastPositionY = null
+        this.rect = Rect(
+            negativeXOffset,
+            negativeYOffset,
+            positiveXOffset - negativeXOffset,
+            positiveYOffset - negativeYOffset
+        )
     }
 }

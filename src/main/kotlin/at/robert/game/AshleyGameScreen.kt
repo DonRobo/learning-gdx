@@ -1,9 +1,6 @@
 package at.robert.game
 
-import at.robert.game.entity.ColumnTile
-import at.robert.game.entity.FloorTile
-import at.robert.game.entity.PlayerEntity
-import at.robert.game.entity.addEntity
+import at.robert.game.entity.*
 import at.robert.game.system.*
 import at.robert.game.util.ResourceManager
 import com.badlogic.gdx.graphics.OrthographicCamera
@@ -49,7 +46,9 @@ class AshleyGameScreen : KtxScreen {
         engine.addSystem(RenderSystem(batch, shapeRenderer, camera, resourceManager))
         engine.addSystem(DespawnSystem(30f))
         engine.addSystem(DebugRenderSystem(batch, debugFont))
-//        engine.addSystem(JBumpDebugRenderSystem(camera, shapeRenderer))
+        engine.addSystem(EnemySystem())
+        engine.addSystem(JBumpDebugRenderSystem(camera, shapeRenderer))
+        engine.addSystem(TransformDebugRenderSystem(camera, shapeRenderer))
 
         engine.addEntity(PlayerEntity())
 
@@ -61,6 +60,10 @@ class AshleyGameScreen : KtxScreen {
 
         engine.addEntity(ColumnTile(3, 3))
 
+//        for (i in 0 until 10) {
+//            engine.addEntity(OrcEnemy(-3f, 3f))
+//        }
+        engine.addEntity(Crate(-3f, 3f))
     }
 
 

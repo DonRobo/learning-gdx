@@ -8,10 +8,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 
 class CharacterAnimator(
     private val idle: SpriteProvider,
-    private val walkNorth: SpriteProvider,
-    private val walkEast: SpriteProvider,
-    private val walkSouth: SpriteProvider,
-    private val walkWest: SpriteProvider,
+    private val walkUp: SpriteProvider,
+    private val walkRight: SpriteProvider,
+    private val walkDown: SpriteProvider,
+    private val walkLeft: SpriteProvider,
 ) : AnimatedSpriteProvider, SpriteModifier {
     private var lookLeft = false
     override val flipX: Boolean get() = lookLeft
@@ -36,21 +36,21 @@ class CharacterAnimator(
         setAnimation(idle)
     }
 
-    fun walkNorth() {
-        setAnimation(walkNorth)
+    fun walkUp() {
+        setAnimation(walkUp)
     }
 
-    fun walkEast() {
-        setAnimation(walkEast)
+    fun walkRight() {
+        setAnimation(walkRight)
         lookLeft = false
     }
 
-    fun walkSouth() {
-        setAnimation(walkSouth)
+    fun walkDown() {
+        setAnimation(walkDown)
     }
 
-    fun walkWest() {
-        setAnimation(walkWest)
+    fun walkLeft() {
+        setAnimation(walkLeft)
         lookLeft = true
     }
 

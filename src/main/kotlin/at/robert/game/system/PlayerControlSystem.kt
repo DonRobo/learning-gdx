@@ -49,27 +49,24 @@ class PlayerControlSystem : IteratingSystem(
         when (chosenDirection) {
             0 -> {
                 transformComponent.y += speed * deltaTime
-                animator?.walkNorth()
+                animator?.walkUp()
             }
             1 -> {
                 transformComponent.x += speed * deltaTime
-                animator?.walkEast()
+                animator?.walkRight()
             }
             2 -> {
                 transformComponent.y -= speed * deltaTime
-                animator?.walkSouth()
+                animator?.walkDown()
             }
             3 -> {
                 transformComponent.x -= speed * deltaTime
-                animator?.walkWest()
+                animator?.walkLeft()
             }
             else -> {
                 animator?.idle()
             }
         }
-        val colliding = entity[CollidingComponent.mapper]
-        if (colliding != null && chosenDirection >= 0) {
-            colliding.moved = true
-        }
+        entity[CollidingComponent.mapper]
     }
 }

@@ -36,16 +36,16 @@ class RenderSystem(
         }
 
         fun Entity.renderY(): Float {
-            val colliding = this[CollidingComponent.mapper]
-            val r = colliding?.rect
-            val offset = if (colliding != null && r != null) {
-                r.y + r.h / 2f
-            } else {
-                0f
-            }
-            val transform = this[TransformComponent.mapper] ?: return Float.NEGATIVE_INFINITY
+            val collider = this[CollidingComponent.mapper]
 
-            return transform.y - transform.height / 2f + offset
+            val transform = this[TransformComponent.mapper] ?: return Float.NEGATIVE_INFINITY
+            val heightToUse = if (collider?.rect != null) {
+                -collider.rect!!.y
+            } else {
+                transform.height / 2f
+            }
+
+            return transform.y - heightToUse
         }
 
         val y1 = o1.renderY()
